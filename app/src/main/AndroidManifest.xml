@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".TTAIApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TTAI"
+        tools:targetApi="31">
+        <!--        android:roundIcon="@mipmap/ic_launcher_round"-->
+        <activity
+            android:name=".ui.activity.PrivacyPolicyActivity"
+            android:exported="false" />
+        <activity android:name=".ui.activity.PrivacyPolicyActivity1"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.TTAI">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.SelectTagActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AcquisitionModeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AIDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AISettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.MyChatSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.ChatActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:theme="@style/Theme.TTAI.TransparentStatusBar"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
+            />
+        <activity
+            android:name=".ui.activity.CollectActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.RequestModelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.RemoteAssistanceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.SearchBluetoothActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:exported="false" />
+        <activity android:name=".ui.activity.MembershipActivity" />
+        <activity
+            android:name=".ui.activity.ChargeMoneyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.CreateAIActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditeNameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditeMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.NotifyListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.NotifyDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.AIBriefActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TTAI.TransparentStatusBar" />
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.ShopActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activity.BlueTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.BlueTestActivity1"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.PaymentWebViewActivity"
+            android:exported="false" /> <!-- FileProvider for camera functionality -->
+        <activity
+            android:name=".ui.activity.PayMethodActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activity.PayHistoryListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.FollowersListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activity.FollowingListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.activity.ChatModelListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.BranchManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditeBriefActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.EditeMemoryBookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.UserHomeActivity"
+            android:exported="false" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+    <uses-permission android:name="android.permission.INTERNET" />
+<!--    <uses-permission-->
+<!--        android:name="android.permission.BLUETOOTH"-->
+<!--        android:maxSdkVersion="30"-->
+<!--        tools:ignore="CoarseFineLocation" />-->
+<!--    <uses-permission-->
+<!--        android:name="android.permission.BLUETOOTH_ADMIN"-->
+<!--        android:maxSdkVersion="30" />-->
+<!--    <uses-permission-->
+<!--        android:name="android.permission.BLUETOOTH_SCAN"-->
+<!--        android:usesPermissionFlags="neverForLocation" />-->
+<!--    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />-->
+<!--    <uses-permission-->
+<!--        android:name="android.permission.ACCESS_FINE_LOCATION"-->
+<!--        android:maxSdkVersion="30"-->
+<!--        tools:ignore="CoarseFineLocation" />-->
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+
+</manifest>

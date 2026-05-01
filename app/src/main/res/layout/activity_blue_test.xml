@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnEnableBluetooth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启蓝牙" />
+
+    <Button
+        android:id="@+id/btnScan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="扫描设备" />
+
+    <Button
+        android:id="@+id/btnMode5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="执行 Motor1 mode5" />
+
+    <Button
+        android:id="@+id/btnMode6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="执行 Motor1 mode6" />
+
+    <Button
+        android:id="@+id/btnMode7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="执行 Motor1 mode7" />
+
+    <Button
+        android:id="@+id/btnMode8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="执行 Motor1 mode8" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="停止 Motor1" />
+
+    <Button
+        android:id="@+id/btnGetBattery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="获取电池状态" />
+
+    <TextView
+        android:id="@+id/dataTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="数据: 未接收"
+        android:textSize="16sp" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

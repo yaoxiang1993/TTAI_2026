@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:background="@color/color_1c1d20">
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@mipmap/icon_arrow_left_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llyReload"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/llyChatSetting">
+
+        <TextView
+            android:id="@+id/ivClearHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableStart="@mipmap/icon_reload"
+            android:drawablePadding="6dp"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:text="重制AI对话"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI设置"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ivBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivBack" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cly1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/cly2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clyName">
+
+        <ImageView
+            android:id="@+id/ivLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:paddingTop="15dp"
+            android:src="@mipmap/icon_light"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/icon_switch_normal"
+            app:layout_constraintStart_toEndOf="@+id/ivLight"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:paddingBottom="10dp"
+            android:text="记忆之芯"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/ivLight"
+            app:layout_constraintStart_toStartOf="@+id/ivLight"
+            app:layout_constraintTop_toBottomOf="@+id/ivLight" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_000000_r50"
+            android:layout_marginTop="2dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:drawablePadding="5dp"
+            android:text="TTAI"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/iv1"
+            app:layout_constraintStart_toStartOf="@+id/iv1"
+            app:layout_constraintTop_toBottomOf="@+id/iv1"
+            android:drawableEnd="@mipmap/icon_vip_tag"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cly2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:paddingStart="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cly1"
+        app:layout_constraintTop_toBottomOf="@+id/clyName">
+
+        <ImageView
+            android:id="@+id/ivReply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:paddingTop="15dp"
+            android:src="@mipmap/icon_reply"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/icon_switch_normal"
+            app:layout_constraintStart_toEndOf="@+id/ivReply"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:paddingBottom="10dp"
+            android:text="声音之芯"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/ivReply"
+            app:layout_constraintStart_toStartOf="@+id/ivReply"
+            app:layout_constraintTop_toBottomOf="@+id/ivReply" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_000000_r50"
+            android:layout_marginTop="2dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:drawablePadding="5dp"
+            android:text="TTAI"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/iv2"
+            app:layout_constraintStart_toStartOf="@+id/iv2"
+            app:layout_constraintTop_toBottomOf="@+id/iv2"
+            android:drawableEnd="@mipmap/icon_vip_tag"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clyChangeModel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cly1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="10dp"
+            android:text="模型切换"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvModel"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="right|center_vertical"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            tools:text="小媞模型"
+            android:textColor="@color/color_6b6b6b"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/llyBranchManager"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:gravity="start"
+        app:layout_constraintTop_toBottomOf="@+id/clyChangeModel">
+
+        <TextView
+            android:id="@+id/tvBranchManager"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:text="分支管理"
+            android:textColor="@color/white"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clyLinkBlueTooth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:paddingStart="18dp"
+        android:paddingEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llyBranchManager">
+
+        <TextView
+            android:id="@+id/tvLinkBlueTooth"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:text="连接蓝牙"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_454545"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLinkBlueTooth" />
+
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/icon_device_defulte"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/view_line"
+            />
+        <TextView
+            android:id="@+id/tvDeviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/ivIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+            android:text="XXXXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginStart="5dp"
+            />
+        <TextView
+            android:id="@+id/tvState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tvDeviceName"
+            app:layout_constraintTop_toTopOf="@+id/ivIcon"
+            app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+            android:text="已连接"
+            android:textColor="@color/color_929292"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"
+            />
+        <ImageView
+            android:id="@+id/iv3"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="25dp"
+            android:src="@mipmap/icon_switch_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view_line" />
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/gpLinkBlueTooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="ivIcon,tvDeviceName,tvState,iv3,view_line"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/llyPortManager"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:gravity="start"
+        app:layout_constraintTop_toBottomOf="@+id/clyLinkBlueTooth">
+
+        <TextView
+            android:id="@+id/tvProtManager"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:text="端口管理"
+            android:textColor="@color/white"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout><LinearLayout
+    android:id="@+id/llyChatSetting"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/bg_383838_r5"
+    android:gravity="start"
+    app:layout_constraintTop_toBottomOf="@+id/llyPortManager">
+
+    <TextView
+        android:id="@+id/tvChatSetting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:drawableEnd="@mipmap/icon_arrow_right_gray"
+        android:drawablePadding="6dp"
+        android:gravity="center_vertical"
+        android:text="我的对话设定"
+        android:textColor="@color/white"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llyMemoryBook"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:gravity="start"
+        app:layout_constraintTop_toBottomOf="@+id/llyChatSetting">
+
+        <TextView
+            android:id="@+id/tvMemoryBook"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:text="记忆簿"
+            android:textColor="@color/white"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clyName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivHeard"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:src="@mipmap/icon_heard_cricle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivHeard"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="XXXX" />
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:drawableStart="@mipmap/icon_iphone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="小手机" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

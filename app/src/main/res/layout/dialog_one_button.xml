@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_ffffff_r20"
+    android:padding="10dp">
+
+    <!-- 消息内容 -->
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textColor="@color/color_2a2a2a"
+        android:text="激活“记忆之芯”后，您与角色的
+
+对话记录将在非转义、非缩写的逻
+
+辑基础上被角色深度学习。角色将
+
+在交流中不断理解并学习您的偏好
+
+与风格。启用该功能的角色，能够
+
+在后续故事发展中主动提及过往出
+
+现的人物、事件，并以多样方式灵
+
+活调用其记忆内容，让互动更贴合
+
+历史、更具连贯性与沉浸感。"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- 确定按钮 -->
+        <Button
+            android:id="@+id/btnPositive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:text="确定"
+            android:textSize="16sp"
+            android:textColor="@color/primary_color"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvMessage"   />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

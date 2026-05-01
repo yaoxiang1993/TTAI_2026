@@ -1,0 +1,51 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# 本地Gradle配置文件
+gradle.properties.local
+
+# Gradle缓存目录
+.gradle/caches/
+.gradle/wrapper/dists/
+
+# 构建缓存
+build/
+app/build/
+
+# Kotlin缓存
+.kotlin/
+
+# 本地配置文件
+local.properties
+local.gradle
+
+# IDE缓存
+.idea/
+*.iml
+
+# 临时文件
+*.tmp
+*.temp
+*.log
+
+# 构建产物
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# 性能分析文件
+build-scan-data/

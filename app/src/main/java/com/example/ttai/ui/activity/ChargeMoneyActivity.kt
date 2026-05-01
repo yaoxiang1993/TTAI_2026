@@ -1,0 +1,160 @@
+package com.example.ttai.ui.activity
+
+import com.example.ttai.utils.ToastUtils
+import com.example.ttai.databinding.ActivityChargeMoneyBinding
+import com.example.ttai.base.BaseMviActivity
+import com.example.ttai.base.viewBinding
+import com.example.ttai.intent.ChargeMoneyIntent
+import com.example.ttai.state.ChargeMoneyState
+import com.example.ttai.ui.vm.ChargeMoneyViewModel
+import com.example.ttai.ui.vm.ChargeMoneyViewModelFactory
+import androidx.activity.viewModels
+import com.example.ttai.R
+import android.view.View
+import com.example.ttai.event.UserBalanceUpdateEvent
+import org.greenrobot.eventbus.EventBus
+import android.content.Intent
+import android.app.Activity
+import android.text.TextUtils
+
+class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState, ChargeMoneyViewModel, ActivityChargeMoneyBinding>() {
+    override val viewModel: ChargeMoneyViewModel by viewModels { ChargeMoneyViewModelFactory(this) }
+    override val binding by viewBinding { ActivityChargeMoneyBinding.inflate(it) }
+    var selectedIndex = 0 // 默认选中第一个
+    private val itemViews = mutableListOf<View>() // 记录所有itemView，便于切换选中状态
+
+    override fun setupViews() {
+        // 返回按钮
+        binding.ivBack.setOnClickListener { finish() }
+        // 充值按钮
+        binding.btnChargeMoney.setOnClickListener {
+            val packages = viewModel.state.value.rechargePackages
+            if (packages.isNotEmpty() && selectedIndex < packages.size) {
+                val selectedPackage = packages[selectedIndex]
+                // 使用套餐ID作为orderNo，fairyJade作为充值金额
+                sendIntent(ChargeMoneyIntent.Charge(selectedPackage.fairyJade))
+            } else {
+                ToastUtils.showShort(this, "请先选择充值套餐")
+            }
+        }
+        
+        // 加载充值套餐列表
+        sendIntent(ChargeMoneyIntent.LoadRechargePackages)
+    }
+    
+    private fun setupRechargePackages() {
+        val inflater = layoutInflater
+        binding.gridLayout.removeAllViews()
+        itemViews.clear()
+
+        fun updateSelection(newIndex: Int) {
+            for (i in itemViews.indices) {
+                val itemView = itemViews[i]
+
+                val tvValue = itemView.findViewById<android.widget.TextView>(R.id.tvValue)
+                val tvBonusJade = itemView.findViewById<android.widget.TextView>(R.id.tvBonusJade)
+                val tvMoney = itemView.findViewById<android.widget.TextView>(R.id.tvMoney)
+                if (i == newIndex) {
+                    itemView.setBackgroundResource(R.drawable.bg_stroke_ffd400_1dp_rounded)
+                    tvValue.setTextColor(itemView.context.getColor(R.color.color_ffd400))
+                    tvMoney.setTextColor(itemView.context.getColor(R.color.color_ffd400))
+                    tvBonusJade.setTextColor(itemView.context.getColor(R.color.color_ffd400))
+                } else {
+                    itemView.setBackgroundResource(R.drawable.bg_stroke_3a3a3a_6b6b6b_1dp_rounded)
+                    tvValue.setTextColor(itemView.context.getColor(android.R.color.white))
+                    tvMoney.setTextColor(itemView.context.getColor(R.color.color_bdbdbd))
+                    tvBonusJade.setTextColor(itemView.context.getColor(R.color.color_bdbdbd))
+                }
+            }
+            selectedIndex = newIndex
+        }
+
+        val packages = viewModel.state.value.rechargePackages
+        if (packages.isNotEmpty()) {
+            for ((index, packageItem) in packages.withIndex()) {
+                val itemView = inflater.inflate(R.layout.item_charge_money, binding.gridLayout, false)
+                val tvBonusJade = itemView.findViewById<android.widget.TextView>(R.id.tvBonusJade)
+                val tvValue = itemView.findViewById<android.widget.TextView>(R.id.tvValue)
+                val tvMoney = itemView.findViewById<android.widget.TextView>(R.id.tvMoney)
+                tvBonusJade.text = "加增${packageItem.bonus_jade}"
+                tvValue.text = packageItem.fairyJade.toString()
+                tvMoney.text = "￥${packageItem.price}"
+                itemView.setOnClickListener {
+                    updateSelection(index)
+                }
+                // 设置margin，保证item间隔10dp
+                val params = itemView.layoutParams as androidx.gridlayout.widget.GridLayout.LayoutParams
+                val marginPx = (8 * itemView.context.resources.displayMetrics.density).toInt() // 14dp转px
+                params.setMargins(marginPx/2, marginPx/2, marginPx/2, marginPx/2)
+                itemView.layoutParams = params
+                itemViews.add(itemView)
+                binding.gridLayout.addView(itemView)
+            }
+            // 默认选中第一个
+            updateSelection(0)
+        }
+    }
+
+    override fun render(state: ChargeMoneyState) {
+        super.render(state)
+        // 处理加载状态
+        binding.btnChargeMoney.isEnabled = !state.isLoading && !state.isLoadingPackages
+        // 显示错误信息
+        state.error?.let { error ->
+            ToastUtils.showShort(this, error)
+        }
+        // 充值成功
+        if (state.chargeSuccess) {
+            ToastUtils.showShort(this, "充值成功！")
+            EventBus.getDefault().post(UserBalanceUpdateEvent())
+            finish()
+        }
+        
+        // 处理支付URL
+        if (!state.payUrl.isNullOrEmpty()) {
+            openPaymentWebView(state.payUrl, state.orderId)
+            // 清除支付URL状态，避免重复打开
+            sendIntent(ChargeMoneyIntent.ClearPayUrl)
+        }
+        
+        // 处理充值套餐数据 - 只在有数据且UI为空时设置
+        if (state.rechargePackages.isNotEmpty() && itemViews.isEmpty()) {
+            setupRechargePackages()
+        }
+        binding.tvTitleTip.text = state.promotionText
+        
+        // 处理套餐加载状态
+        if (state.isLoadingPackages) {
+            // 可以显示加载指示器，这里可以添加进度条显示
+        }
+    }
+    
+    private fun openPaymentWebView(payUrl: String, orderId: String?) {
+        val intent = Intent(this, PayMethodActivity::class.java).apply {
+            putExtra(PaymentWebViewActivity.EXTRA_PAY_URL, payUrl)
+            putExtra(PaymentWebViewActivity.EXTRA_ORDER_ID, orderId)
+        }
+        startActivityForResult(intent, REQUEST_CODE_PAYMENT)
+    }
+    
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PAYMENT) {
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    // 支付成功，刷新用户余额
+                    EventBus.getDefault().post(UserBalanceUpdateEvent())
+                    ToastUtils.showShort(this, "支付成功！")
+                    finish()
+                }
+                Activity.RESULT_CANCELED -> {
+                    // 支付取消或失败，不做处理
+                }
+            }
+        }
+    }
+    
+    companion object {
+        const val REQUEST_CODE_PAYMENT = 1001
+    }
+} 

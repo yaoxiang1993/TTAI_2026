@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 自定义 BottomNavigationView 样式 -->
+    <style name="CustomBottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/color_1c1d20</item>
+        <item name="itemIconTint">@color/selector_ffffff_6b6b6b</item>
+        <item name="itemTextColor">@color/selector_ffffff_6b6b6b</item>
+        <item name="itemRippleColor">@android:color/transparent</item>
+        <item name="itemIconSize">28dp</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavigationTextAppearance</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationTextAppearance</item>
+    </style>
+
+    <!-- BottomNavigationView 文字样式 -->
+    <style name="BottomNavigationTextAppearance" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/selector_ffffff_6b6b6b</item>
+    </style>
+
+    <!-- 创建智能体按钮样式 -->
+    <style name="CreateAIButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/bg_create_ai_button</item>
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <!-- TabLayout 文字样式 -->
+    <style name="TabTextAppearance" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/color_6b6b6b</item>
+    </style>
+
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+</resources> 

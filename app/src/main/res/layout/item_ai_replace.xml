@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_eaeaea_r10"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/icon_heard_cricle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="化世豪"
+        android:textColor="@color/color_2a2a2a"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="@+id/ivIcon"
+        app:layout_constraintStart_toEndOf="@+id/ivIcon"
+        app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+        android:layout_marginStart="10dp"
+        />
+    <TextView
+        android:id="@+id/tvReplace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_stroke_primary_r50"
+        app:layout_constraintTop_toTopOf="@+id/ivIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivIcon"
+        android:layout_marginEnd="15dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textSize="12sp"
+        android:textColor="@color/primary_color"
+        android:text="替换"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">TTAI</string>
+
+    <!-- 审核状态相关字符串 -->
+    <string name="review_status_pending">审核中</string>
+    <string name="review_status_approved">已通过</string>
+    <string name="review_status_rejected">已拒绝</string>
+
+    <!-- 审核状态描述 -->
+    <string name="review_status_pending_desc">您的角色正在审核中，请耐心等待</string>
+    <string name="review_status_approved_desc">您的角色已通过审核，可以正常使用</string>
+    <string name="review_status_rejected_desc">您的角色审核未通过</string>
+    <string name="review_status_rejected_with_reason">审核未通过：%s</string>
+    <string name="ai_release_or_add">您的聊天位已满，请选择一个聊天位替换或者去扩列AI位～</string>
+
+
+</resources>

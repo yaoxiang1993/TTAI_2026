@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btn_copy"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="复制"
+android:textColor="@color/black"
+style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btn_delete"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="删除"
+android:textColor="@color/black"
+style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btn_forward"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="转发"
+android:textColor="@color/black"
+style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+<com.google.android.material.button.MaterialButton
+android:id="@+id/btn_multi_select"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="多选此消息"
+android:textColor="@color/black"
+style="@style/Widget.MaterialComponents.Button.TextButton" />
+    </LinearLayout>

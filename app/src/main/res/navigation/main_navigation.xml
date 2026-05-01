@@ -1,0 +1,30 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.ttai.ui.fragment.MainFragment"
+        android:label="消息"
+        tools:layout="@layout/fragment_main" />
+
+    <fragment
+        android:id="@+id/dreamFragment"
+        android:name="com.example.ttai.ui.fragment.DreamFragment"
+        android:label="梦境"
+        tools:layout="@layout/fragment_dream" />
+
+    <fragment
+        android:id="@+id/contorlFragment"
+        android:name="com.example.ttai.ui.fragment.ControlFragment"
+        android:label="控制"
+        tools:layout="@layout/fragment_control" />
+
+    <fragment
+        android:id="@+id/myFragment"
+        android:name="com.example.ttai.ui.fragment.MyFragment"
+        android:label="我的"
+        tools:layout="@layout/fragment_my" />
+</navigation>

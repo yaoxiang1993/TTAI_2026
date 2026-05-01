@@ -1,0 +1,18 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 未完成部分（背景） -->
+    <item android:id="@android:id/background">
+        <shape>
+            <size android:height="1px" /> <!-- 设置进度条高度为 2dp -->
+            <solid android:color="#6B6B6B" />
+        </shape>
+    </item>
+    <!-- 完成部分（进度） -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <size android:height="1px" /> <!-- 设置进度条高度为 2dp -->
+                <solid android:color="#AB00FF" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

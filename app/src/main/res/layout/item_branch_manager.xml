@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_stroke_primary_r10"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/ivActive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_current"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="XXXX模型"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ivActive"
+        app:layout_constraintTop_toTopOf="@+id/ivActive"
+        />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        android:maxLines="2"
+        android:ellipsize="end"
+        tools:text="XXXX模型XXXXXX模型X模型XXXX模型"
+        android:textColor="@color/color_6b6b6b"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        />
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+        tools:text="XXXX模型XXXXXX模型X模型XXXX模型"
+        android:textColor="@color/color_6b6b6b"
+        android:layout_marginTop="10dp"
+        android:textSize="10sp"
+        />
+    <TextView
+        android:id="@+id/tvUnreadCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvTime"
+        tools:text="10"
+        android:textColor="@color/color_6b6b6b"
+        android:textSize="10sp"
+        />
+
+    <ImageView
+        android:id="@+id/ivMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_shenlv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvName"
+        android:layout_marginEnd="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/ivIsPinned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_ispinned"
+        app:layout_constraintEnd_toStartOf="@+id/ivMore"
+        app:layout_constraintTop_toTopOf="@+id/ivMore"
+        app:layout_constraintBottom_toBottomOf="@+id/ivMore"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,109 @@
+package com.example.ttai.adapter
+
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.example.ttai.R
+import com.example.ttai.bean.Character
+import com.example.ttai.bean.FollowsItem
+import com.example.ttai.bean.PayHistoryItem
+import com.example.ttai.databinding.ItemFancesBinding
+import com.example.ttai.databinding.ItemPayHistoryBinding
+import com.example.ttai.utils.DateUtils
+
+class PayHistoryListAdapter : ListAdapter<Any, RecyclerView.ViewHolder>(PayHistoryDiffCallback()) {
+    
+    companion object {
+        private const val VIEW_TYPE_ITEM = 0
+        private const val VIEW_TYPE_LOADING = 1
+    }
+    
+    private var isLoadingMore = false
+    
+    fun setLoadingMore(loading: Boolean) {
+        isLoadingMore = loading
+        notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position < currentList.size) VIEW_TYPE_ITEM else VIEW_TYPE_LOADING
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_ITEM -> {
+                val binding = ItemPayHistoryBinding.inflate(
+                    LayoutInflater.from(parent.context), parent, false
+                )
+                PayHistoryListViewHolder(binding)
+            }
+            VIEW_TYPE_LOADING -> {
+                val loadingView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_loading_more, parent, false)
+                LoadingViewHolder(loadingView)
+            }
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is PayHistoryListViewHolder -> {
+                val item = getItem(position) as PayHistoryItem
+                holder.bind(item)
+            }
+            is LoadingViewHolder -> {
+                // 加载更多的ViewHolder不需要绑定数据
+            }
+        }
+    }
+    
+    override fun getItemCount(): Int {
+        return currentList.size + if (isLoadingMore) 1 else 0
+    }
+
+    class PayHistoryListViewHolder(
+        private val binding: ItemPayHistoryBinding ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: PayHistoryItem) {
+            binding.apply {
+                // 设置基本信息
+                tvName.text = item.description
+                item.created_at?.let {
+                    tvDate.text = DateUtils.formatTimestamp( item.created_at)
+                }
+                tvPrice.text = item.amount
+            }
+        }
+    }
+    
+    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // 加载更多的ViewHolder，可以在这里添加加载动画
+    }
+
+    class PayHistoryDiffCallback : DiffUtil.ItemCallback<Any>() {
+        override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+            return if (oldItem is PayHistoryItem && newItem is PayHistoryItem) {
+                oldItem.user_id == newItem.user_id
+            } else {
+                oldItem == newItem
+            }
+        }
+
+        override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+            return if (oldItem is PayHistoryItem && newItem is PayHistoryItem) {
+                // 优化比较逻辑，只比较关键字段
+                oldItem._id == newItem._id
+            } else {
+                oldItem == newItem
+            }
+        }
+    }
+} 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">  <!-- oval 表示椭圆，当宽高相等时就是正圆 -->
+    <solid android:color="@color/color_ed3833" />  <!-- 填充红色，可以改成 #F20000 等更常见的通知红 -->
+    <size  android:width="2dp"  android:height="2dp" />
+</shape>

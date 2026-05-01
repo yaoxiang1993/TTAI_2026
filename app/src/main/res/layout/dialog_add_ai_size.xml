@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_ffffff_r10">
+
+    <ImageView
+        android:id="@+id/ivBg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@mipmap/icon_add_ai_bg_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/icon_back_1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ivBg"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        />
+    <!-- 取消按钮 -->
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="提升AI数量上限"
+        android:textColor="@color/color_2a2a2a"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivBg" />
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="固定AI数量为3个，如需提升数量需消耗金币～"
+        android:textColor="@color/color_8a8a8a"
+        app:layout_constraintEnd_toEndOf="@+id/ivBg"
+        app:layout_constraintStart_toStartOf="@+id/ivBg"
+        app:layout_constraintTop_toBottomOf="@+id/tvMessage" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="210dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvText"
+        app:layout_constraintStart_toStartOf="@+id/ivBg"
+        app:layout_constraintEnd_toEndOf="@+id/ivBg"
+        android:background="@mipmap/icon_add_ai_bg_2"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tvCoast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="35"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        android:layout_marginStart="20dp"
+        android:drawableStart="@mipmap/icon_unit_1_big"
+        android:drawablePadding="8dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="立即提升"
+        android:textSize="14sp"
+        android:textColor="@color/color_ffc100"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        android:layout_marginEnd="10dp"
+        android:drawablePadding="8dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

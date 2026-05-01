@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 虚拟导航栏适配Tag ID -->
+    <item name="navigation_bar_adapter_tag" type="id" />
+</resources>

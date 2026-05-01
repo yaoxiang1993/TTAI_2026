@@ -1,0 +1,170 @@
+设备工作于BLE Peripheral (Slave)模式,具体蓝牙属性如下：
+Device name: HuiXiang
+
+Server					UUID:180A
+Characteristic 1			UUID:2A29 (Manufacturer Name String)
+Properties:				Read
+Characteristic 2: 			UUID:2A27 (Hardware Revision String)
+Properties:				Read
+Characteristic 2: 			UUID:2A50 (Pnp ID)
+Properties:				Read
+
+Server					UUID:0000FE00-0000-1000-8000-00805F9B34FB
+Characteristic 1			UUID:
+Properties:				Write
+Characteristic 2: 			UUID:FE02
+Properties:				Notify
+
+修改说明：
+1、删除握手校验部分；
+2、修改广播数据内容；
+
+
+广播数据格式：
+Flags : <0x06>
+16Bit Service UUID : <FE 00> 
+ManufacturerData : <设备MAC地址(6Byte)>
+BleLocalName : HuiXiang
+
+注：设备扫描过滤需满足以下条件
+蓝牙名称为 HuiXiang
+
+
+数据包格式
+Header（头部）	Payload（数据）
+1Byte	1Byte	18Byte
+Command_id	key	value
+
+1.2.Command列表
+Command_id	定义
+0x01	获取命令
+0x02	设置命令
+0x03	设备Notity信息命令
+	
+1.2.1 获取命令
+key	定义
+0x01	APP获取设备基本信息
+0x11	获取设备电池状态信息
+0x12	APP获取设备运行状态
+	
+
+1）APP获取设备基本信息（command_id=0x01,key=0x01）
+FE01 Write：Value(18Byte)
+全部补0
+示例：01 01   000000000000000（18字节）....
+FE02 Notify：Value(18Byte)
+4Byte	4Byte	2Byte	1Byte	1Byte	6Byte
+Dev_id	Fw_Ver	Build_date	Mf_id	Handshake_
+status	Dev_addr
+设备ID	固件号：Vx.x.x
+(x=0-9)	编译日期	厂家ID	握手状态	mac地址
+示例：01 01   信息（18字节）......
+2）获取设备电池状态信息（command_id=0x01,key=0x11）
+FE01 Write：Value(18Byte)
+全部补0
+示例：01 11    00000000000（18字节）...
+FE02 Notify：Value(18Byte)
+4Byte	1Byte	1Byte	1Byte	11Byte
+Adc_Value	Bat_status	Bat_Level	Bat_precent	Reserved
+电池采样值	电池状态
+0：正常
+1：充电
+2：充满
+3：低电
+4：异常	电池格数
+(0-4)	电池电量比例
+(0-100%)	保留
+补0
+
+示例 01 11 00000051 03 01 08 000000...
+01 电池格数
+08 电量百分比
+
+3）获取设备运行状态状态信息（command_id=0x01,key=0x12）
+FE01 Write：Value(18Byte)
+全部补0
+示例：01 12    00000000000（18字节）...
+FE02 Notify：Value(18Byte)
+1Byte	1Byte	1Byte	1Byte	14Byte
+运行状态	运行模式	吮吸强度	震动强度	Reserved
+0x01:手动设置（根据设置的吮吸震动强度运行）
+0x02:模式运行（根据设置的模式运行）	模式运行中的模式	手动设置吮吸强度	手动设置震动强度	保留
+补0
+示例：01 12 01 00 12 23 000000000000...
+01 运行状态为 手动设置
+12 23 吮吸强度为12   震动强度为23
+
+
+
+
+1.2.2 设置命令
+key	定义
+0x01	手动设置 吮吸 震动 强度
+0x02	设置运行模式
+
+1)手动设置（command_id=0x02, key=0x01）
+FE01 Write：Value(18Byte)
+1Byte	1Byte	16Byte
+吮吸强度（0-100）	震动强度（0-100）	Reserved
+		保留   补0
+示例：02 01 12 23 00000000......
+FE02 Notify：Value(18Byte)
+1Byte	17Byte
+0：设置失败
+1：设置成功	数据
+全部补0
+示例：02 01 01 000000000.......
+2)设置运行模式（command_id=0x02, key=0x02）
+FE01 Write：Value(18Byte)
+1Byte	17Byte
+Mode	Reserved
+震动模式
+(0-20模式)
+0：待机
+有效模式从1开始	保留
+补0
+示例：02 02 01 000000000.......
+FE02 Notify：Value(18Byte)
+1Byte	17Byte
+0：设置失败
+1：设置成功	数据
+全部补0
+示例：02 02 01 000000000.......
+
+
+1.2.3 推送设备状态命令
+key	定义
+0x01	推送设备基本状态（有变化才推送）
+0x11	推送设备电池状态（有变化才推送）
+0x12	推送设备运行状态（通过按键设置才推送）
+
+1）推送设备基本状态（command_id=0x03, key=0x01）
+FE02 Notify：Value(18Byte)
+4Byte	4Byte	2Byte	1Byte	1Byte	6Byte
+Dev_id	Fw_Ver	Build_date	Mf_id	Handshake_
+status	Dev_addr
+设备ID	固件号：Vxx.xx.xx
+(x=0-9)	编译日期	厂家ID	握手状态	mac地址
+
+2）推送设备电池状态（command_id=0x03, key=0x11）
+FE02 Notify：Value(18Byte)
+4Byte	1Byte	1Byte	1Byte	11Byte
+Adc_Value	Bat_status	Bat_Level	Bat_precent	Reserved
+电池采样值	电池状态
+0：正常
+1：充电
+2：充满
+3：低电
+4：异常	电池格数
+(0-4)	电池电量比例
+(0-100%)	保留
+补0
+
+3）推送设备运行状态（command_id=0x03, key=0x12）
+FE02 Notify：Value(18Byte)
+1Byte	1Byte	1Byte	1Byte	14Byte
+运行状态	运行模式	吮吸强度	震动强度	Reserved
+0x01:手动设置（根据设置的吮吸震动强度运行）
+0x02:模式运行（根据设置的模式运行）	模式运行中的模式	手动设置吮吸强度	手动设置震动强度	保留
+补0
+在用户通过按键设置后，进行推送。通过app命令设置过来的，无需推送。
