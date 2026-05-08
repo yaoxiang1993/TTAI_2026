@@ -103,17 +103,18 @@ android {
             useSupportLibrary = true
         }
     }
-//    signingConfigs {
-//        release {
-//            storeFile file("path/to/your/keystore.jks")
-//            storePassword "ttai123"
-//            keyAlias "your_key_alias"
-//            keyPassword "your_key_password"
-//        }
-//    }
+    signingConfigs {
+        create("release") {
+            storeFile = file("D:\\project\\TTAI0911\\TTAI\\ttai.jks")
+            storePassword ="ttai123"
+            keyAlias ="key0"
+            keyPassword ="ttai123"
+        }
+    }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
