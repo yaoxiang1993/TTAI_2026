@@ -9,6 +9,7 @@ import com.example.ttai.bean.AllocatePermanentMemoryResponse
 import com.example.ttai.bean.ApiResponse
 import com.example.ttai.bean.AppUpdateInfo
 import com.example.ttai.bean.AuthData
+import com.example.ttai.bean.BlindBoxDataResponse
 import com.example.ttai.bean.BranchManagerResponse
 import com.example.ttai.bean.BranchResponse
 import com.example.ttai.bean.BuyExtraSlotData
@@ -55,6 +56,8 @@ import com.example.ttai.bean.MyAIListResponse
 import com.example.ttai.bean.NotificationsResponse
 import com.example.ttai.bean.OnboardingStatusData
 import com.example.ttai.bean.OneClickAuthRequest
+import com.example.ttai.bean.OrderData
+import com.example.ttai.bean.OrderDetail
 import com.example.ttai.bean.OrderListData
 import com.example.ttai.bean.OwnedItemsResponse
 import com.example.ttai.bean.PayHistoryResponse
@@ -245,9 +248,16 @@ interface ApiService {
     @POST("api/user/wallet/alipay-recharge")
     suspend fun rechargeCurrency(@Body request: RechargeCurrencyRequest): ApiResponse<RechargeCurrencyResponse>
 
+    /** 创建盲盒订单 */
+    @POST("api/user/wallet/alipay-blind-box")
+    suspend fun rechargeBlindBox( ): ApiResponse<OrderData>
+
     /** 获取充值套餐列表 */
     @GET("api/user/recharge-packages")
     suspend fun getRechargePackages(): ApiResponse<RechargePackagesData>
+    /** 获取盲盒规则、概率和当前中奖情况 */
+    @GET("api/shop/blind-box/info")
+    suspend fun getBlindBoxInfo(): ApiResponse<BlindBoxDataResponse>
 
     /** 获取货币余额 */
     @GET("api/user/currency_balance")
@@ -544,10 +554,22 @@ interface ApiService {
 
 
     /**
-     获取版本信息
+    获取版本信息
      *
      */
     @GET("api/app/version/check")
     suspend fun getVersionCheck(@Path("platform") platform: String?,@Path("current_build") currentBuild: Int?,@Path("current_version") currentVersion: String? ): ApiResponse<AppUpdateInfo>
+
+    /**
+    ## 4. 查询盲盒订单状态和开奖结果
+
+    盲盒下单后，前端继续复用现有订单状态接口查询支付和开奖结果。
+
+     **接口地址**
+
+    `GET /api/user/order/status/{order_id}`
+     */
+    @GET("api/user/order/status/{order_id}")
+    suspend fun getBlindBoxOrderResult(@Path("order_id") orderId: String?): ApiResponse<OrderDetail>
 
 }

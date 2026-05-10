@@ -4,6 +4,9 @@ import android.bluetooth.BluetoothDevice
 import com.example.ttai.base.MviState
 import com.example.ttai.bean.AiSettingsData
 import com.example.ttai.bean.AppUpdateInfo
+import com.example.ttai.bean.BlindBoxDataResponse
+import com.example.ttai.bean.BlindBoxInfo
+import com.example.ttai.bean.BlindBoxResult
 import com.example.ttai.bean.BranchItem
 import com.example.ttai.bean.Character
 import com.example.ttai.bean.ChatModelItem
@@ -370,9 +373,15 @@ data class ChargeMoneyState(
     val promotionText: String = "",
     val chargeSuccess: Boolean = false,
     val rechargePackages: List<RechargePackage> = emptyList(),
+    val blindBoxDataResponse:BlindBoxDataResponse? = null,
+    val blindBoxResult: BlindBoxResult? = null,
     val isLoadingPackages: Boolean = false,
+    val isLoadingBlindBoxInfo: Boolean = false,
     val payUrl: String? = null,
-    val orderId: String? = null
+    val orderId: String? = null,
+    val isBuyBlindBox: Boolean? = false,
+    val openImmediately: Boolean? = false,
+    val isShowBlindBox: Boolean? = false
 ) : MviState
 
 data class AIBriefState(

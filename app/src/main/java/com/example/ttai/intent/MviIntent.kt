@@ -257,8 +257,13 @@ sealed class MembershipIntent : MviIntent {
 
 sealed class ChargeMoneyIntent : MviIntent {
     object LoadRechargePackages : ChargeMoneyIntent()
+    object LoadBlindBoxInfo : ChargeMoneyIntent()
+    object rechargeBlindBox : ChargeMoneyIntent()
     data class Charge(val amount: Int) : ChargeMoneyIntent()
     object ClearPayUrl : ChargeMoneyIntent()
+    data class BlindBoxOrderResult (val blindBoxOrderId: String): ChargeMoneyIntent()
+
+    object ClearShowBlindBox : ChargeMoneyIntent()
 }
 
 sealed class AIBriefIntent : MviIntent {

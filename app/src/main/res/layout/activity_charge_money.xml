@@ -147,7 +147,7 @@
             app:layout_constraintStart_toEndOf="@+id/tvText"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp"
-            android:text="￥ 19.9"
+            tools:text="￥ 19.9"
             android:textSize="14sp"
             android:layout_marginStart="3dp"
             android:textColor="@color/color_fd9800"

@@ -20,8 +20,12 @@ class ChargeMoneyViewModel(private val context: Context) : MviViewModel<ChargeMo
     override fun processIntent(intent: ChargeMoneyIntent) {
         when (intent) {
             is ChargeMoneyIntent.LoadRechargePackages -> loadRechargePackages()
+            is ChargeMoneyIntent.LoadBlindBoxInfo -> loadBlindBoxInfo()
             is ChargeMoneyIntent.Charge -> charge(intent.amount)
+            is ChargeMoneyIntent.rechargeBlindBox -> rechargeBlindBox()
             is ChargeMoneyIntent.ClearPayUrl -> clearPayUrl()
+            is ChargeMoneyIntent.ClearShowBlindBox -> clearPayUrl()
+            is ChargeMoneyIntent.BlindBoxOrderResult -> getBlindBoxOrderResult(intent.blindBoxOrderId)
         }
     }
 
@@ -43,14 +47,49 @@ class ChargeMoneyViewModel(private val context: Context) : MviViewModel<ChargeMo
             }
         }
     }
+    private fun loadBlindBoxInfo() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoadingBlindBoxInfo = true, error = null)
+            try {
+                val response = repository.getBlindBoxInfo()
+                _state.value = _state.value.copy(
+                    isLoadingBlindBoxInfo = false,
+                    blindBoxDataResponse = response,
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoadingBlindBoxInfo = false,
+                    error = e.message ?: "获取充值套餐失败"
+                )
+            }
+        }
+    }
+    private fun getBlindBoxOrderResult(order_id:String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoadingBlindBoxInfo = true, error = null,isShowBlindBox = false)
+            try {
+                val response = repository.getBlindBoxOrderResult(order_id)
+                _state.value = _state.value.copy(
+                    isLoadingBlindBoxInfo = false,
+                    isShowBlindBox = true,
+                    blindBoxResult = response.blindBoxResult,
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoadingBlindBoxInfo = false,
+                    error = e.message ?: "获取充值套餐失败"
+                )
+            }
+        }
+    }
 
     private fun charge(amount: Int) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true, error = null, chargeSuccess = false)
+            _state.value = _state.value.copy(isLoading = true, error = null, chargeSuccess = false,isBuyBlindBox = false)
             try {
                 val response = repository.rechargeCurrency(amount)
                 _state.value = _state.value.copy(
-                    isLoading = false, 
+                    isLoading = false,
                     chargeSuccess = false,
                     payUrl = response.payUrl,
                     orderId = response.orderId
@@ -63,8 +102,32 @@ class ChargeMoneyViewModel(private val context: Context) : MviViewModel<ChargeMo
             }
         }
     }
-    
+    private fun rechargeBlindBox() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null, chargeSuccess = false, openImmediately = false)
+            try {
+                val response = repository.rechargeBlindBox()
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    chargeSuccess = false,
+                    payUrl = response.payUrl,
+                    orderId = response.orderId,
+                    isBuyBlindBox = true,
+                    openImmediately = response.openImmediately
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "充值失败"
+                )
+            }
+        }
+    }
+
     private fun clearPayUrl() {
         _state.value = _state.value.copy(payUrl = null, orderId = null)
+    }
+    private fun clearShowBlindBox() {
+        _state.value = _state.value.copy(isShowBlindBox = false)
     }
 } 

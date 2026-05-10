@@ -15,12 +15,17 @@ import com.example.ttai.event.UserBalanceUpdateEvent
 import org.greenrobot.eventbus.EventBus
 import android.content.Intent
 import android.app.Activity
-import android.text.TextUtils
+import com.example.ttai.ui.dialog.BlindBoxDialogFragment
 
 class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState, ChargeMoneyViewModel, ActivityChargeMoneyBinding>() {
     override val viewModel: ChargeMoneyViewModel by viewModels { ChargeMoneyViewModelFactory(this) }
     override val binding by viewBinding { ActivityChargeMoneyBinding.inflate(it) }
     var selectedIndex = 0 // 默认选中第一个
+    var isBuyBlindBox : Boolean = false //是购买的盲盒
+    var openImmediately : Boolean = false //购买的盲盒是否直接打开
+    var orderId : String = "" //  订单号
+
+
     private val itemViews = mutableListOf<View>() // 记录所有itemView，便于切换选中状态
 
     override fun setupViews() {
@@ -37,9 +42,15 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
                 ToastUtils.showShort(this, "请先选择充值套餐")
             }
         }
-        
+        // 立即购买盲盒
+        binding.btnChargeBlindBox.setOnClickListener {
+            sendIntent(ChargeMoneyIntent.rechargeBlindBox)
+        }
+
         // 加载充值套餐列表
         sendIntent(ChargeMoneyIntent.LoadRechargePackages)
+        // 加载充值套餐列表
+        sendIntent(ChargeMoneyIntent.LoadBlindBoxInfo)
     }
     
     private fun setupRechargePackages() {
@@ -109,10 +120,11 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
             EventBus.getDefault().post(UserBalanceUpdateEvent())
             finish()
         }
-        
+        isBuyBlindBox = state.isBuyBlindBox == true
+        orderId = state.orderId.toString()
         // 处理支付URL
         if (!state.payUrl.isNullOrEmpty()) {
-            openPaymentWebView(state.payUrl, state.orderId)
+            openPaymentWebView(state.payUrl, state.orderId )
             // 清除支付URL状态，避免重复打开
             sendIntent(ChargeMoneyIntent.ClearPayUrl)
         }
@@ -122,10 +134,16 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
             setupRechargePackages()
         }
         binding.tvTitleTip.text = state.promotionText
-        
-        // 处理套餐加载状态
-        if (state.isLoadingPackages) {
-            // 可以显示加载指示器，这里可以添加进度条显示
+
+        state.blindBoxDataResponse?.let {
+            binding.tvText.text = it.blindBox.name
+            binding.tvPrice.text = "¥ ${it.blindBox.price}"
+        }
+        if (state.isShowBlindBox == true) {
+            state.blindBoxResult?.rewardJade?.let {
+                val dialog = BlindBoxDialogFragment.newInstance(rewardJade = it)
+                dialog.show(supportFragmentManager, "BlindBoxDialogFragment")
+            }
         }
     }
     
@@ -145,7 +163,14 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
                     // 支付成功，刷新用户余额
                     EventBus.getDefault().post(UserBalanceUpdateEvent())
                     ToastUtils.showShort(this, "支付成功！")
-                    finish()
+                    if (isBuyBlindBox && openImmediately){
+                        isBuyBlindBox = false
+                        openImmediately = false
+                        // 购买的盲盒，并且立即打开
+                        sendIntent(ChargeMoneyIntent.BlindBoxOrderResult(orderId))
+                    }else{
+                        finish()
+                    }
                 }
                 Activity.RESULT_CANCELED -> {
                     // 支付取消或失败，不做处理

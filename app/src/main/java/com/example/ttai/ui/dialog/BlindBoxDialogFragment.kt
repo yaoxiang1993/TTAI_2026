@@ -5,12 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.WithHint
 import androidx.fragment.app.DialogFragment
-import com.example.ttai.R
 import com.example.ttai.databinding.DialogBlindBoxBinding
-import com.example.ttai.databinding.DialogEditeBinding
-import com.example.ttai.databinding.DialogTwoButtonBinding
 
 
 class BlindBoxDialogFragment : DialogFragment() {
@@ -25,10 +21,7 @@ class BlindBoxDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
     private var listener: OnButtonClickListener? = null
 
-    // 数据参数
-    private var title: String? = null
-    private var hint: String? = null
-    private var message: String? = ""
+    private var rewardJade: Int? = 0
 
     // 设置回调
     fun setOnButtonClickListener(listener: OnButtonClickListener): BlindBoxDialogFragment {
@@ -39,15 +32,11 @@ class BlindBoxDialogFragment : DialogFragment() {
     // 设置参数的静态方法
     companion object {
         fun newInstance(
-            title: String? = null,
-            hint: String?=null,
-            message: String?=null,
+            rewardJade: Int = 0,
         ): BlindBoxDialogFragment {
             return BlindBoxDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString("title", title)
-                    putString("hint", hint)
-                    putString("message", message)
+                    putInt("rewardJade", rewardJade)
                 }
             }
         }
@@ -58,10 +47,10 @@ class BlindBoxDialogFragment : DialogFragment() {
 
         // 获取参数
         arguments?.let {
-            title = it.getString("title")
-            hint = it.getString("hint")
-            message = it.getString("message")
+            rewardJade = it.getInt("rewardJade")
         }
+        // 设置消息
+        binding.tvMessage.text = "盲盒开出了${rewardJade}仙玉~"
     }
 
     override fun onCreateView(

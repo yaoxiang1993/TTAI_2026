@@ -1651,3 +1651,311 @@ data class AppUpdateInfo(
     @SerializedName("published_at")
     val publishedAt: Long
 )
+
+/**
+ * 盲盒数据根对象
+ */
+data class BlindBoxDataResponse(
+    @SerializedName("blind_box")
+    val blindBox: BlindBoxInfo,
+
+    @SerializedName("current_winning_status")
+    val currentWinningStatus: CurrentWinningStatus
+)
+
+/**
+ * 盲盒基础信息
+ */
+data class BlindBoxInfo(
+    @SerializedName("product_id")
+    val productId: String, // 盲盒商品ID
+
+    @SerializedName("name")
+    val name: String, // 盲盒名称
+
+    @SerializedName("price")
+    val price: Double, // 售价，单位元
+
+    @SerializedName("currency")
+    val currency: String, // 币种，固定 CNY
+
+    @SerializedName("payment_methods")
+    val paymentMethods: List<String>, // 当前支持的支付方式
+
+    @SerializedName("rule_version")
+    val ruleVersion: String, // 规则版本号
+
+    @SerializedName("open_immediately")
+    val openImmediately: Boolean, // 是否支付后直接开启
+
+    @SerializedName("rules")
+    val rules: List<BlindBoxRule> // 奖池规则列表
+)
+
+/**
+ * 奖池具体区间规则
+ */
+data class BlindBoxRule(
+    @SerializedName("range_key")
+    val rangeKey: String, // 区间唯一标识
+
+    @SerializedName("range_label")
+    val rangeLabel: String, // 区间展示文案
+
+    @SerializedName("min_jade")
+    val minJade: Int, // 最小仙玉值
+
+    @SerializedName("max_jade")
+    val maxJade: Int, // 最大仙玉值
+
+    @SerializedName("probability")
+    val probability: Double, // 概率，小数形式 (例如 0.15)
+
+    @SerializedName("probability_text")
+    val probabilityText: String, // 概率展示文案 (例如 "15%")
+
+    @SerializedName("mean_jade")
+    val meanJade: Int, // 区间均值
+
+    @SerializedName("description")
+    val description: String // 区间说明
+)
+
+/**
+ * 中奖状态统计
+ */
+data class CurrentWinningStatus(
+    @SerializedName("recent_wins")
+    val recentWins: List<RecentWinRecord>, // 最近中奖播报
+
+    @SerializedName("overall_stats")
+    val overallStats: OverallStats, // 全站盲盒统计
+
+    @SerializedName("user_summary")
+    val userSummary: UserBlindBoxSummary? // 当前用户自己的摘要，未登录或无数据时为 null
+)
+
+/**
+ * 单条最近中奖记录
+ */
+data class RecentWinRecord(
+    @SerializedName("username_masked")
+    val usernameMasked: String, // 脱敏后的用户名
+
+    @SerializedName("reward_jade")
+    val rewardJade: Int, // 获得的仙玉数量
+
+    @SerializedName("range_label")
+    val rangeLabel: String, // 中奖区间标签
+
+    @SerializedName("range_probability_text")
+    val rangeProbabilityText: String, // 该区间概率文案
+
+    @SerializedName("opened_at")
+    val openedAt: Long // 开启时间戳
+)
+
+/**
+ * 全站统计信息
+ */
+data class OverallStats(
+    @SerializedName("total_count")
+    val totalCount: Int, // 总开启次数
+
+    @SerializedName("total_reward_jade")
+    val totalRewardJade: Long, // 总产出仙玉
+
+    @SerializedName("max_reward_jade")
+    val maxRewardJade: Int // 全站单次最高奖励
+)
+
+/**
+ * 用户个人盲盒摘要
+ */
+data class UserBlindBoxSummary(
+    @SerializedName("purchase_count")
+    val purchaseCount: Int, // 购买次数
+
+    @SerializedName("total_reward_jade")
+    val totalRewardJade: Long, // 累计获得仙玉
+
+    @SerializedName("max_reward_jade")
+    val maxRewardJade: Int, // 个人单次最高奖励
+
+    @SerializedName("last_reward_jade")
+    val lastRewardJade: Int, // 最近一次获得的仙玉
+
+    @SerializedName("last_opened_at")
+    val lastOpenedAt: Long // 最近一次开启时间戳
+)
+
+/**
+ * 盲盒订单详细信息
+ */
+data class OrderData(
+    /**
+     * 盲盒订单号
+     */
+    @SerializedName("order_id")
+    val orderId: String,
+
+    /**
+     * 支付宝支付链接
+     */
+    @SerializedName("pay_url")
+    val payUrl: String,
+
+    /**
+     * 实际支付金额 (目前固定为 19.9)
+     */
+    @SerializedName("pay_amount")
+    val payAmount: Double,
+
+    /**
+     * 盲盒商品ID
+     */
+    @SerializedName("product_id")
+    val productId: String,
+
+    /**
+     * 盲盒商品名称
+     */
+    @SerializedName("product_name")
+    val productName: String,
+
+    /**
+     * 支付成功后是否直接开启
+     */
+    @SerializedName("open_immediately")
+    val openImmediately: Boolean
+)
+
+/**
+ * 订单详细信息
+ */
+data class OrderDetail(
+    @SerializedName("_id")
+    val id: String,
+
+    @SerializedName("order_id")
+    val orderId: String,
+
+    /**
+     * 订单支付状态: pending(待支付), paid(已支付), failed(支付失败)
+     */
+    @SerializedName("status")
+    val status: String,
+
+    @SerializedName("payment_method")
+    val paymentMethod: String,
+
+    @SerializedName("pay_amount")
+    val payAmount: Double,
+
+    @SerializedName("product_type")
+    val productType: String,
+
+    @SerializedName("product_id")
+    val productId: String,
+
+    @SerializedName("product_name")
+    val productName: String,
+
+    /**
+     * 盲盒开奖状态: pending(未开始), processing(处理中), completed(已完成)
+     */
+    @SerializedName("reward_status")
+    val rewardStatus: String,
+
+    /**
+     * 开盒时间，秒级时间戳；未开奖时可能为 null
+     */
+    @SerializedName("opened_at")
+    val openedAt: Long?,
+
+    @SerializedName("paid_at")
+    val paidAt: Long,
+
+    @SerializedName("created_at")
+    val createdAt: Long,
+
+    @SerializedName("updated_at")
+    val updatedAt: Long,
+
+    /**
+     * 开奖结果详情；未开奖时为 null
+     */
+    @SerializedName("blind_box_result")
+    val blindBoxResult: BlindBoxResult?
+)
+
+/**
+ * 具体的开奖结果信息
+ */
+data class BlindBoxResult(
+    @SerializedName("product_id")
+    val productId: String,
+
+    @SerializedName("product_name")
+    val productName: String,
+
+    @SerializedName("rule_version")
+    val ruleVersion: String,
+
+    /**
+     * 实际获得的仙玉数量
+     */
+    @SerializedName("reward_jade")
+    val rewardJade: Int,
+
+    /**
+     * 命中的概率区间标识
+     */
+    @SerializedName("range_key")
+    val rangeKey: String,
+
+    /**
+     * 命中的区间展示文案 (例如 "2500 ~ 3500")
+     */
+    @SerializedName("range_label")
+    val rangeLabel: String,
+
+    @SerializedName("range_min")
+    val rangeMin: Int,
+
+    @SerializedName("range_max")
+    val rangeMax: Int,
+
+    /**
+     * 命中区间的概率 (例如 0.35)
+     */
+    @SerializedName("range_probability")
+    val rangeProbability: Double,
+
+    /**
+     * 命中区间的概率展示文案 (例如 "35%")
+     */
+    @SerializedName("range_probability_text")
+    val rangeProbabilityText: String,
+
+    @SerializedName("range_mean_jade")
+    val rangeMeanJade: Int,
+
+    /**
+     * 区间说明
+     */
+    @SerializedName("description")
+    val description: String,
+
+    /**
+     * 开盒时间
+     */
+    @SerializedName("opened_at")
+    val openedAt: Long,
+
+    /**
+     * 盲盒开奖记录ID
+     */
+    @SerializedName("record_id")
+    val recordId: String
+)
