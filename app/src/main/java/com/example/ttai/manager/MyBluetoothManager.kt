@@ -486,7 +486,7 @@ object MyBluetoothManager{
             if ((characteristic.properties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0 ||
                 (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0) {
                 if (currtentByteArray == null){
-                    currtentByteArray = byteArr ayOf(0x02,0x01,vibration?.toByte()?:0,sucking?.toByte()?:0)
+                    currtentByteArray = byteArrayOf(0x02,0x01,vibration?.toByte()?:0,sucking?.toByte()?:0)
                     characteristic.value = currtentByteArray
                     Log.d("BluetoothManager", "写入特征: ${characteristic.uuid}, 值: ${currtentByteArray!!.joinToString { it.toString(16) }}")
                     bluetoothGatt?.writeCharacteristic(characteristic)

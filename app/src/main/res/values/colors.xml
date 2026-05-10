@@ -51,6 +51,7 @@
     <color name="color_717171">#717171</color>
     <color name="color_9a9b9f">#9a9b9f</color>
     <color name="color_cd6aac">#cd6aac</color>
+    <color name="color_fd9800">#fd9800</color>
 
     <!-- 审核状态颜色 -->
     <color name="review_status_pending">#FFC100</color>
