@@ -24,6 +24,7 @@ class UpdateDialogFragment : DialogFragment() {
     private var listener: OnButtonClickListener? = null
 
     // 数据参数
+    private var title: String? = null
     private var message: String? = null
     private var positiveText: String? = null
     private var negativeText: String? = null
@@ -37,12 +38,14 @@ class UpdateDialogFragment : DialogFragment() {
     // 设置参数的静态方法
     companion object {
         fun newInstance(
-            message: String,
-            positiveText: String = "下载更新",
-            negativeText: String = "暂时不更新"
+            title: String?="发现新版本",
+            message: String?,
+            positiveText: String? = "下载更新",
+            negativeText: String? = "暂时不更新"
         ): UpdateDialogFragment {
             return UpdateDialogFragment().apply {
                 arguments = Bundle().apply {
+                    putString("title", title)
                     putString("message", message)
                     putString("positiveText", positiveText)
                     putString("negativeText", negativeText)
@@ -55,6 +58,7 @@ class UpdateDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         // 获取参数
         arguments?.let {
+            title = it.getString("title")
             message = it.getString("message")
             positiveText = it.getString("positiveText")
             negativeText = it.getString("negativeText")
@@ -82,6 +86,8 @@ class UpdateDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // 设置消息
+        binding.tvTitle.text = message
         // 设置消息
         binding.tvMessage.text = message
 

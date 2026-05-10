@@ -1,11 +1,13 @@
 package com.example.ttai.network
 
+import android.R
 import com.example.ttai.bean.AddChatSlotRequest
 import com.example.ttai.bean.AddChatSlotResponse
 import com.example.ttai.bean.AiSettingsData
 import com.example.ttai.bean.AllocatePermanentMemoryRequest
 import com.example.ttai.bean.AllocatePermanentMemoryResponse
 import com.example.ttai.bean.ApiResponse
+import com.example.ttai.bean.AppUpdateInfo
 import com.example.ttai.bean.AuthData
 import com.example.ttai.bean.BranchManagerResponse
 import com.example.ttai.bean.BranchResponse
@@ -538,5 +540,14 @@ interface ApiService {
     suspend fun branchCreateBranch(@Body request: CreateBranchRequest): ApiResponse<BranchResponse>
     @POST("api/chat/branches/{branch_id}")
     suspend fun branchEditeBranchName(@Path("branch_id") branch_id: String?,@Body request: EditeBranchRequest): ApiResponse<BranchResponse>
+
+
+
+    /**
+     获取版本信息
+     *
+     */
+    @GET("api/app/version/check")
+    suspend fun getVersionCheck(@Path("platform") platform: String?,@Path("current_build") currentBuild: Int?,@Path("current_version") currentVersion: String? ): ApiResponse<AppUpdateInfo>
 
 }

@@ -9,6 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.ttai.R
 import com.example.ttai.base.BaseMviActivity
 import com.example.ttai.base.viewBinding
+import com.example.ttai.bean.AppUpdateInfo
 import com.example.ttai.bean.ShopItem
 import com.example.ttai.event.SwitchToMyFragmentEvent
 import com.example.ttai.ui.fragment.ControlFragment
@@ -23,6 +24,7 @@ import com.example.ttai.utils.Constants
 import com.example.ttai.utils.LayoutUtils
 import com.example.ttai.ui.vm.MainActivityViewModel
 import com.example.ttai.utils.AppUpdater
+import com.example.ttai.utils.ToastUtils
 import java.util.ArrayList
 
 class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, MainActivityViewModel, ActivityMainBinding>() {
@@ -70,22 +72,36 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         if (intent.getBooleanExtra(Constants.SHOW_DIALOG,false)){
             show18DialogClick()
         }
-        showUpdateDialog()
+        showUpdateDialog(null)
+        sendIntent(MainActivityIntent.versionCheck)
     }
 
-    private fun showUpdateDialog() {
-        val dialog = UpdateDialogFragment.newInstance("sdfsdf")
+    private fun showUpdateDialog(appUpdateInfo : AppUpdateInfo?) {
+        val notesDisplay = appUpdateInfo?.releaseNotes?.joinToString("\n") { "• $it" }
+        val dialog = UpdateDialogFragment.newInstance(appUpdateInfo?.title, message = notesDisplay,appUpdateInfo?.buttonText,appUpdateInfo?.cancelText)
             .setOnButtonClickListener(object : UpdateDialogFragment.OnButtonClickListener {
                 override fun onPositiveClick() {
                     // 开始更新
-                    val apkUrl = "https://example.com/app-release.apk"
-                    AppUpdater.startDownload(this@MainActivity, apkUrl, "new_version.apk")
+                    val apkUrl : String? =  appUpdateInfo?.actionUrl
+                    apkUrl?.let {
+                        AppUpdater.startDownload(this@MainActivity, apkUrl, "ttai${appUpdateInfo.currentVersion}.apk")
+                    }?:{
+                        ToastUtils.showShort(this@MainActivity,"下载链接获取失败")
+                    }
                 }
 
                 override fun onNegativeClick() {
                     // 暂不更新
+                   if (appUpdateInfo?.forceUpdate == true) {
+                       finishAffinity()
+                   }
                 }
             })
+
+        // 如果是强制更新，禁止点击弹窗外部取消
+        if (appUpdateInfo?.forceUpdate == true) {
+            dialog.setCancelable(false)
+        }
         dialog.show(supportFragmentManager, "UpdateDialogFragment")
     }
 
@@ -127,6 +143,11 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         binding.viewPager.setCurrentItem(state.currentTabIndex, false)
         // 更新自定义底部导航栏选中状态
         updateTabSelection(state.currentTabIndex)
+        state.appUpdateInfo?.let {
+            if (it.hasUpdate){
+                showUpdateDialog(it)
+            }
+        }
     }
     
     /**

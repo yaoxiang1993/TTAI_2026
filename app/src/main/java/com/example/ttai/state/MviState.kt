@@ -3,6 +3,7 @@ package com.example.ttai.state
 import android.bluetooth.BluetoothDevice
 import com.example.ttai.base.MviState
 import com.example.ttai.bean.AiSettingsData
+import com.example.ttai.bean.AppUpdateInfo
 import com.example.ttai.bean.BranchItem
 import com.example.ttai.bean.Character
 import com.example.ttai.bean.ChatModelItem
@@ -135,7 +136,8 @@ data class MyFragmentState(
 data class MainActivityState(
      val isLoading: Boolean = false,
      val error: String? = null,
-     val currentTabIndex: Int = 0
+     val currentTabIndex: Int = 0,
+     val  appUpdateInfo : AppUpdateInfo?= null,
 ) : MviState
 
 data class ChatState(

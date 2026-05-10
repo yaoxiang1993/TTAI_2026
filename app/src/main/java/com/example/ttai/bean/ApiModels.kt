@@ -1567,3 +1567,87 @@ data class BranchResponse(
     @SerializedName("is_main") var is_main: Boolean=false,
     @SerializedName("updated_at") val updated_at: Long
 )
+
+
+/**
+ *
+ * **字段说明**
+ *
+ * | 字段名 | 类型 | 说明 |
+ * | --- | --- | --- |
+ * | has_update | bool | 是否存在更新 |
+ * | force_update | bool | 是否强制更新 |
+ * | latest_version | string/null | 最新版本号 |
+ * | latest_build | int/null | 最新build号 |
+ * | min_supported_build | int/null | 最低支持build，小于该值可判定为强更 |
+ * | title | string | 弹窗标题 |
+ * | subtitle | string | 弹窗副标题 |
+ * | release_notes | array | 更新内容列表 |
+ * | action_type | string | `download` / `store` / `tip` |
+ * | action_url | string | 安卓下载地址或 iOS App Store 地址 |
+ * | button_text | string | 主按钮文案 |
+ * | cancel_text | string | 次按钮文案 |
+ * | published_at | int/null | 发布时间，秒级时间戳 |
+ *
+ * **错误码**
+ *
+ * | 错误码 | 说明 |
+ * | --- | --- |
+ * | 22001 | platform是必填项 |
+ * | 22002 | platform不合法 |
+ * | 22003 | current_build不是整数 |
+ * | 22004 | current_build和current_version都未提供 |
+ * | 22099 | 服务器内部错误 |
+ * */
+data class AppUpdateInfo(
+    @SerializedName("has_update")
+    val hasUpdate: Boolean,
+
+    @SerializedName("force_update")
+    val forceUpdate: Boolean,
+
+    @SerializedName("platform")
+    val platform: String,
+
+    @SerializedName("channel")
+    val channel: String,
+
+    @SerializedName("current_version")
+    val currentVersion: String?, // JSON 中为 null，设为可空
+
+    @SerializedName("current_build")
+    val currentBuild: Int,
+
+    @SerializedName("latest_version")
+    val latestVersion: String,
+
+    @SerializedName("latest_build")
+    val latestBuild: Int,
+
+    @SerializedName("min_supported_build")
+    val minSupportedBuild: Int,
+
+    @SerializedName("title")
+    val title: String,
+
+    @SerializedName("subtitle")
+    val subtitle: String,
+
+    @SerializedName("release_notes")
+    val releaseNotes: List<String>,
+
+    @SerializedName("action_type")
+    val actionType: String,
+
+    @SerializedName("action_url")
+    val actionUrl: String,
+
+    @SerializedName("button_text")
+    val buttonText: String,
+
+    @SerializedName("cancel_text")
+    val cancelText: String,
+
+    @SerializedName("published_at")
+    val publishedAt: Long
+)
