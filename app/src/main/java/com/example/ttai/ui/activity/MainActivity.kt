@@ -18,9 +18,11 @@ import com.example.ttai.ui.fragment.MyFragment
 import com.example.ttai.intent.MainActivityIntent
 import com.example.ttai.state.MainActivityState
 import com.example.ttai.ui.dialog.OneButtonDialogFragment
+import com.example.ttai.ui.dialog.UpdateDialogFragment
 import com.example.ttai.utils.Constants
 import com.example.ttai.utils.LayoutUtils
 import com.example.ttai.ui.vm.MainActivityViewModel
+import com.example.ttai.utils.AppUpdater
 import java.util.ArrayList
 
 class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, MainActivityViewModel, ActivityMainBinding>() {
@@ -68,6 +70,23 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         if (intent.getBooleanExtra(Constants.SHOW_DIALOG,false)){
             show18DialogClick()
         }
+        showUpdateDialog()
+    }
+
+    private fun showUpdateDialog() {
+        val dialog = UpdateDialogFragment.newInstance("sdfsdf")
+            .setOnButtonClickListener(object : UpdateDialogFragment.OnButtonClickListener {
+                override fun onPositiveClick() {
+                    // 开始更新
+                    val apkUrl = "https://example.com/app-release.apk"
+                    AppUpdater.startDownload(this@MainActivity, apkUrl, "new_version.apk")
+                }
+
+                override fun onNegativeClick() {
+                    // 暂不更新
+                }
+            })
+        dialog.show(supportFragmentManager, "UpdateDialogFragment")
     }
 
     private fun show18DialogClick( ) {

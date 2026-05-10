@@ -38,8 +38,8 @@ class UpdateDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(
             message: String,
-            positiveText: String = "确定",
-            negativeText: String = "取消"
+            positiveText: String = "下载更新",
+            negativeText: String = "暂时不更新"
         ): UpdateDialogFragment {
             return UpdateDialogFragment().apply {
                 arguments = Bundle().apply {
