@@ -138,8 +138,10 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
         state.blindBoxDataResponse?.let {
             binding.tvText.text = it.blindBox.name
             binding.tvPrice.text = "¥ ${it.blindBox.price}"
+            binding.tvText1.text = it.blindBox.rewardDescription
         }
         if (state.isShowBlindBox == true) {
+            sendIntent(ChargeMoneyIntent.ClearShowBlindBox)
             state.blindBoxResult?.rewardJade?.let {
                 val dialog = BlindBoxDialogFragment.newInstance(rewardJade = it)
                 dialog.show(supportFragmentManager, "BlindBoxDialogFragment")

@@ -1684,6 +1684,8 @@ data class BlindBoxInfo(
 
     @SerializedName("rule_version")
     val ruleVersion: String, // 规则版本号
+    @SerializedName("reward_description")
+    val rewardDescription: String, // "可随机获得1000-14000仙玉"
 
     @SerializedName("open_immediately")
     val openImmediately: Boolean, // 是否支付后直接开启

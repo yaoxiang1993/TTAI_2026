@@ -558,7 +558,7 @@ interface ApiService {
      *
      */
     @GET("api/app/version/check")
-    suspend fun getVersionCheck(@Path("platform") platform: String?,@Path("current_build") currentBuild: Int?,@Path("current_version") currentVersion: String? ): ApiResponse<AppUpdateInfo>
+    suspend fun getVersionCheck(@Query("platform") platform: String?,@Query("current_build") currentBuild: Int?,@Query("current_version") currentVersion: String? ): ApiResponse<AppUpdateInfo>
 
     /**
     ## 4. 查询盲盒订单状态和开奖结果

@@ -23,12 +23,14 @@ import com.example.ttai.ui.dialog.UpdateDialogFragment
 import com.example.ttai.utils.Constants
 import com.example.ttai.utils.LayoutUtils
 import com.example.ttai.ui.vm.MainActivityViewModel
+import com.example.ttai.ui.vm.MainActivityViewModelFactory
+import com.example.ttai.ui.vm.MainFragmentViewModelFactory
 import com.example.ttai.utils.AppUpdater
 import com.example.ttai.utils.ToastUtils
 import java.util.ArrayList
 
 class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, MainActivityViewModel, ActivityMainBinding>() {
-    override val viewModel: MainActivityViewModel by viewModels()
+    override val viewModel: MainActivityViewModel by viewModels{ MainActivityViewModelFactory(this) }
     override val binding by viewBinding { ActivityMainBinding.inflate(it) }
     
     // 跟踪当前选中的 tab 索引

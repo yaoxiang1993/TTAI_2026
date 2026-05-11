@@ -24,7 +24,7 @@ class ChargeMoneyViewModel(private val context: Context) : MviViewModel<ChargeMo
             is ChargeMoneyIntent.Charge -> charge(intent.amount)
             is ChargeMoneyIntent.rechargeBlindBox -> rechargeBlindBox()
             is ChargeMoneyIntent.ClearPayUrl -> clearPayUrl()
-            is ChargeMoneyIntent.ClearShowBlindBox -> clearPayUrl()
+            is ChargeMoneyIntent.ClearShowBlindBox -> clearShowBlindBox()
             is ChargeMoneyIntent.BlindBoxOrderResult -> getBlindBoxOrderResult(intent.blindBoxOrderId)
         }
     }
