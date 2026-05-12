@@ -51,6 +51,8 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
         sendIntent(ChargeMoneyIntent.LoadRechargePackages)
         // 加载充值套餐列表
         sendIntent(ChargeMoneyIntent.LoadBlindBoxInfo)
+        val dialog = BlindBoxDialogFragment.newInstance(rewardJade = 200)
+        dialog.show(supportFragmentManager, "BlindBoxDialogFragment")
     }
     
     private fun setupRechargePackages() {

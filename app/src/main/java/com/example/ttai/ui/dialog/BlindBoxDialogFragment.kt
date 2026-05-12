@@ -49,8 +49,6 @@ class BlindBoxDialogFragment : DialogFragment() {
         arguments?.let {
             rewardJade = it.getInt("rewardJade")
         }
-        // 设置消息
-        binding.tvMessage.text = "盲盒开出了${rewardJade}仙玉~"
     }
 
     override fun onCreateView(
@@ -64,7 +62,7 @@ class BlindBoxDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.tvMessage.text = "盲盒开出了${rewardJade}仙玉~"
         binding.ivClose.setOnClickListener {
             listener?.onNegativeClick()
             dismiss()
@@ -79,6 +77,7 @@ class BlindBoxDialogFragment : DialogFragment() {
         super.onStart()
         // 设置对话框宽度，距离屏幕左右两边10dp
         dialog?.window?.let { window ->
+            window.setBackgroundDrawableResource(android.R.color.transparent)
             val displayMetrics = resources.displayMetrics
             val width = displayMetrics.widthPixels - (40 * resources.displayMetrics.density).toInt()
             window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
     android:padding="16dp">
 
     <TextView
@@ -10,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="恭喜您!"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/primary_color"
@@ -36,7 +38,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@mipmap/icon_show_blind_box"
         app:layout_constraintTop_toBottomOf="@+id/tvMessage"
-        android:layout_marginTop="20dp"
         />
 
     <ImageView
