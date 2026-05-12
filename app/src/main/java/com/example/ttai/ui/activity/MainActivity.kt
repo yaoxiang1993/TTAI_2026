@@ -1,7 +1,9 @@
 package com.example.ttai.ui.activity
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.example.ttai.databinding.ActivityMainBinding
@@ -74,19 +76,18 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         if (intent.getBooleanExtra(Constants.SHOW_DIALOG,false)){
             show18DialogClick()
         }
-        showUpdateDialog(null)
         sendIntent(MainActivityIntent.versionCheck)
     }
 
     private fun showUpdateDialog(appUpdateInfo : AppUpdateInfo?) {
         val notesDisplay = appUpdateInfo?.releaseNotes?.joinToString("\n") { "• $it" }
-        val dialog = UpdateDialogFragment.newInstance(appUpdateInfo?.title, message = notesDisplay,appUpdateInfo?.buttonText,appUpdateInfo?.cancelText)
+        val dialog = UpdateDialogFragment.newInstance(appUpdateInfo?.title,appUpdateInfo?.subtitle, message = notesDisplay,appUpdateInfo?.buttonText,appUpdateInfo?.cancelText)
             .setOnButtonClickListener(object : UpdateDialogFragment.OnButtonClickListener {
                 override fun onPositiveClick() {
                     // 开始更新
                     val apkUrl : String? =  appUpdateInfo?.actionUrl
-                    apkUrl?.let {
-                        AppUpdater.startDownload(this@MainActivity, apkUrl, "ttai${appUpdateInfo.currentVersion}.apk")
+                      apkUrl?.let {
+                        AppUpdater.startDownload(this@MainActivity, apkUrl )
                     }?:{
                         ToastUtils.showShort(this@MainActivity,"下载链接获取失败")
                     }
@@ -101,9 +102,7 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
             })
 
         // 如果是强制更新，禁止点击弹窗外部取消
-        if (appUpdateInfo?.forceUpdate == true) {
-            dialog.setCancelable(false)
-        }
+        dialog.setCancelable(false)
         dialog.show(supportFragmentManager, "UpdateDialogFragment")
     }
 
@@ -148,6 +147,7 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         state.appUpdateInfo?.let {
             if (it.hasUpdate){
                 showUpdateDialog(it)
+                sendIntent(MainActivityIntent.ClearUpdateInfo)
             }
         }
     }

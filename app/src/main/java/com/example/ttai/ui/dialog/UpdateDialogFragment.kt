@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.example.ttai.R
 import com.example.ttai.databinding.DialogTwoButtonBinding
@@ -25,6 +26,8 @@ class UpdateDialogFragment : DialogFragment() {
 
     // 数据参数
     private var title: String? = null
+    private var subtitle: String? = null
+
     private var message: String? = null
     private var positiveText: String? = null
     private var negativeText: String? = null
@@ -39,6 +42,7 @@ class UpdateDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(
             title: String?="发现新版本",
+            subtitle: String?="",
             message: String?,
             positiveText: String? = "下载更新",
             negativeText: String? = "暂时不更新"
@@ -46,6 +50,7 @@ class UpdateDialogFragment : DialogFragment() {
             return UpdateDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString("title", title)
+                    putString("subtitle", subtitle)
                     putString("message", message)
                     putString("positiveText", positiveText)
                     putString("negativeText", negativeText)
@@ -59,6 +64,7 @@ class UpdateDialogFragment : DialogFragment() {
         // 获取参数
         arguments?.let {
             title = it.getString("title")
+            subtitle = it.getString("subtitle")
             message = it.getString("message")
             positiveText = it.getString("positiveText")
             negativeText = it.getString("negativeText")
@@ -77,9 +83,11 @@ class UpdateDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         // 设置对话框宽度，距离屏幕左右两边10dp
+
         dialog?.window?.let { window ->
+            window.setBackgroundDrawableResource(android.R.color.transparent)
             val displayMetrics = resources.displayMetrics
-            val width = displayMetrics.widthPixels - (40 * resources.displayMetrics.density).toInt()
+            val width = displayMetrics.widthPixels - (50 * resources.displayMetrics.density).toInt()
             window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
         }
     }
@@ -87,7 +95,11 @@ class UpdateDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 设置消息
-        binding.tvTitle.text = message
+        binding.tvTitle.text = title
+        binding.tvSubtitle.isVisible = subtitle?.isEmpty() != true
+        // 设置消息
+        binding.tvSubtitle.text = subtitle
+
         // 设置消息
         binding.tvMessage.text = message
 

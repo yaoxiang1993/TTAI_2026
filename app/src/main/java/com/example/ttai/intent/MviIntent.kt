@@ -51,6 +51,7 @@ sealed class MainFragmentIntent : MviIntent {
 sealed class MainActivityIntent : MviIntent {
     data class SwitchTab(val index: Int) : MainActivityIntent()
     object versionCheck : MainActivityIntent()
+    object ClearUpdateInfo : MainActivityIntent()
 }
 
 sealed class DreamFragmentIntent : MviIntent {

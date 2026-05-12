@@ -25,6 +25,9 @@ class MainActivityViewModel(private val context: Context): MviViewModel<MainActi
                 is MainActivityIntent.versionCheck -> {
                     _state.value = _state.value.copy(appUpdateInfo = mainRepository.getVersionCheck())
                 }
+                is MainActivityIntent.ClearUpdateInfo -> {
+                    _state.value = _state.value.copy(appUpdateInfo = null)
+                }
             }
         }
     }
