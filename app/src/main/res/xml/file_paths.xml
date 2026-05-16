@@ -3,4 +3,5 @@
     <external-files-path name="my_images" path="." />
     <!-- 对应 Context.getExternalFilesDir(null) 的路径 -->
     <external-files-path name="download_apk" path="Download/" />
-</paths> 
+    <external-path name="public_downloads" path="Download" />
+</paths>
