@@ -202,174 +202,147 @@ class ChatAdapter(private val onRollbackClick: (Message?) -> Unit,
         }
     }
 
-    /**
-     * 接收消息的 ViewHolder，显示左侧对齐的消息、发送者和头像
-     */
     class ReceivedMessageViewHolder(private val binding: ItemMessageReceivedBinding) : RecyclerView.ViewHolder(binding.root) {
         private var isExpanded = false
-        private var originalContent = ""
-        private var currentMessageId: String? = null // 添加当前消息ID跟踪
-        
+        private var currentMessageId: String? = null
+
+        // 预编译正则，提高流式刷新时的性能
+        private val bracketRegex = "[（(].*?[）)]".toRegex()
+
         fun bind(message: Message) {
-            // 如果消息ID发生变化，重置所有状态
             if (currentMessageId != message.id) {
                 resetViewHolderState()
                 currentMessageId = message.id
             }
 
-            if (message.isTyping) {
-                // 正在输入状态，显示动画省略号
-                binding.tvMessage.text = "正在输入..."
-                binding.ivExpand.visibility = android.view.View.GONE
-                binding.tvMessage.maxLines = Int.MAX_VALUE
+            val content = message.content?.toString() ?: ""
+
+            if (message.isTyping && content.isBlank()) {
+                binding.tvMessage.visibility = View.VISIBLE
+                binding.ivMeme.visibility = View.GONE
+                binding.ivExpand.visibility = View.GONE
+                binding.tvMessage.text = ""
                 startTypingAnimation()
             } else {
-                // 正常消息
-                originalContent = message.content.toString()
-                handleMessageContent(message)
                 stopTypingAnimation()
+                handleMessageContent(message)
             }
         }
-        
+
         /**
-         * 重置ViewHolder状态，避免缓存问题
+         * 重置状态，防止复用导致的错乱
          */
         private fun resetViewHolderState() {
             isExpanded = false
-            originalContent = ""
             stopTypingAnimation()
-            binding.ivExpand.visibility =  View.GONE
+            binding.ivExpand.visibility = View.GONE
             binding.ivMeme.visibility = View.GONE
             binding.tvMessage.visibility = View.VISIBLE
-            binding.tvMessage.maxLines = Int.MAX_VALUE // 重置行数限制
+            binding.tvMessage.maxLines = Int.MAX_VALUE
         }
-        
+
         private fun handleMessageContent(message: Message) {
-            // 确保停止任何正在运行的动画
-            stopTypingAnimation()
-            
-            if (message.content.toString().startsWith("简介:")) {
-                // 处理以"简介:"开头的消息
-                setupExpandableMessage(message.content.toString())
-            } else {
-                if (message.message_type == "meme"){
-                    binding.ivMeme.isVisible  = true
-                    binding.tvMessage.isVisible  = false
+            val content = message.content?.toString() ?: ""
+
+            // 处理表情包类型
+            if (message.message_type == "meme") {
+                binding.ivMeme.isVisible = true
+                binding.tvMessage.isVisible = false
+                binding.ivExpand.isVisible = false
+                Glide.with(binding.ivMeme.context)
+                    .load(content)
+                    .into(binding.ivMeme)
+            }
+            // 处理文本类型（包含 SSE 流式文本）
+            else {
+                binding.ivMeme.isVisible = false
+                binding.tvMessage.isVisible = true
+
+                // 实时格式化括号变色
+                binding.tvMessage.text = formatMessageWithBracketColor(content)
+
+                // 处理“简介:”开头的特殊展开逻辑
+                if (content.startsWith("简介:")) {
+                    setupExpandableLogic()
+                } else {
                     binding.ivExpand.isVisible = false
-                    Glide.with(binding.ivMeme.context)
-                        .load(message.content.toString())
-                        .into(binding.ivMeme)
-                }else{
-                    // 普通消息，正常显示
-                    binding.tvMessage.text = formatMessageWithBracketColor(message.content.toString())
-                    binding.ivExpand.isVisible = false
-                    binding.ivMeme.isVisible  = false
                     binding.tvMessage.maxLines = Int.MAX_VALUE
                 }
             }
         }
 
-        private fun setupExpandableMessage(content: String) {
-            // 确保停止任何正在运行的动画
-            stopTypingAnimation()
-            
-            val formattedContent = formatMessageWithBracketColor(content)
-            binding.tvMessage.text = formattedContent
-
-            // 使用post延迟检查，确保文本渲染完成后再检查行数
+        /**
+         * 动态计算行数并决定是否显示“展开”按钮
+         */
+        private fun setupExpandableLogic() {
+            // 使用 post 确保在 TextView 渲染完成后计算行数
             binding.tvMessage.post {
                 val lineCount = binding.tvMessage.lineCount
-                
-                // 临时修改：如果行数大于2就显示展开按钮（用于测试）
                 if (lineCount > 3) {
-                    // 内容超过2行，显示展开按钮
-                    binding.ivExpand.visibility = android.view.View.VISIBLE
+                    binding.ivExpand.visibility = View.VISIBLE
                     binding.tvMessage.maxLines = if (isExpanded) Int.MAX_VALUE else 3
-                    
-                    // 设置展开按钮点击事件
+
                     binding.ivExpand.setOnClickListener {
-                        toggleExpand()
+                        isExpanded = !isExpanded
+                        binding.tvMessage.maxLines = if (isExpanded) Int.MAX_VALUE else 3
+                        // 这里可以根据需要切换 ivExpand 的图标旋转状态
                     }
                 } else {
-                    // 内容不超过2行，隐藏展开按钮
-                    binding.ivExpand.visibility = android.view.View.GONE
+                    binding.ivExpand.visibility = View.GONE
                     binding.tvMessage.maxLines = Int.MAX_VALUE
                 }
             }
         }
 
-        
-        private fun toggleExpand() {
-            isExpanded = !isExpanded
-            if (isExpanded) {
-                // 展开：显示全部内容
-                binding.tvMessage.maxLines = Int.MAX_VALUE
-                android.util.Log.d("ChatAdapter", "展开消息内容 - 显示全部")
-            } else {
-                // 收起：限制为2行
-                binding.tvMessage.maxLines = 3
-                android.util.Log.d("ChatAdapter", "收起消息内容到3行")
-            }
-        }
-        
+        /**
+         * 启动“正在输入...”动画
+         */
         private fun startTypingAnimation() {
-            // 创建动画效果，让省略号闪烁
-            val animator = android.animation.ValueAnimator.ofInt(0, 3)
-            animator.duration = 1000
-            animator.repeatCount = android.animation.ValueAnimator.INFINITE
-            animator.addUpdateListener { animation ->
-                val dots = ".".repeat(animation.animatedValue as Int + 1)
-                binding.tvMessage.text = "正在输入$dots"
+            stopTypingAnimation()
+            val animator = android.animation.ValueAnimator.ofInt(0, 3).apply {
+                duration = 1000
+                repeatCount = android.animation.ValueAnimator.INFINITE
+                addUpdateListener { animation ->
+                    if (!binding.tvMessage.isVisible) {
+                        animation.cancel()
+                        return@addUpdateListener
+                    }
+                    val count = animation.animatedValue as Int
+                    val dots = ".".repeat((count % 3) + 1)
+                    binding.tvMessage.text = "正在输入$dots"
+                }
             }
             animator.start()
-            
-            // 保存动画引用以便停止
             itemView.tag = animator
         }
-        
+
+        /**
+         * 停止动画
+         */
         private fun stopTypingAnimation() {
-            // 停止动画
-            (itemView.tag as? android.animation.ValueAnimator)?.cancel()
+            (itemView.tag as? android.animation.ValueAnimator)?.let {
+                it.removeAllUpdateListeners()
+                it.cancel()
+            }
             itemView.tag = null
         }
-        
+
         /**
-         * 格式化消息文本，将括号内的内容设置为特定颜色
-         * @param text 原始文本
-         * @return 格式化后的文本
+         * 正则匹配括号内容并变色
          */
         private fun formatMessageWithBracketColor(text: String): SpannableStringBuilder {
-            val spannableStringBuilder = SpannableStringBuilder(text)
+            val ssb = SpannableStringBuilder(text)
             val bracketColor = ContextCompat.getColor(itemView.context, R.color.color_b6b6b6)
-            
-            // 使用栈来处理嵌套括号，避免死循环
-            val stack = mutableListOf<Int>()
-            var i = 0
-            
-            while (i < text.length) {
-                when (text[i]) {
-                         '(' ,
-                        '（' ->  {
-                        stack.add(i) // 将左括号位置入栈
-                       }
-                    ')','）'-> {
-                        if (stack.isNotEmpty()) {
-                            val openIndex = stack.removeAt(stack.size - 1) // 弹出最近的左括号
-                            // 设置括号内文本的颜色
-                            spannableStringBuilder.setSpan(
-                                ForegroundColorSpan(bracketColor),
-                                openIndex,
-                                i + 1, // 包含右括号
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                            )
-                        }
-                        // 如果没有匹配的左括号，忽略这个右括号
-                    }
-                }
-                i++
+
+            bracketRegex.findAll(text).forEach { match ->
+                ssb.setSpan(
+                    ForegroundColorSpan(bracketColor),
+                    match.range.first,
+                    match.range.last + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
-            
-            return spannableStringBuilder
+            return ssb
         }
     }
 

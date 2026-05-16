@@ -29,6 +29,9 @@ import com.example.ttai.bean.UpdateMessageResponse
 import com.example.ttai.network.ApiHelper
 import com.example.ttai.network.ApiService
 import com.example.ttai.network.NetworkModule
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import org.json.JSONObject
 
 class ChatRepository(private val context: Context) {
     private val apiService: ApiService = NetworkModule.createService()
@@ -50,6 +53,34 @@ class ChatRepository(private val context: Context) {
                     MyBluetoothManager.getSuckingIntensity(), MyBluetoothManager.connectedDevice!=null)
                 apiService.sendMessage(request)
             }
+        )
+    }
+    /**
+     * 发送流式消息
+     * @param characterId 角色ID
+     * @param content 消息内容
+     * @param listener SSE 监听器
+     */
+    fun sendMessageStream(
+        characterId: String,
+        content: String,
+        listener: EventSourceListener
+    ): EventSource {
+        // 构造与文档一致的请求体
+        val jsonRequest = JSONObject().apply {
+            put("character_id", characterId)
+            put("message", content)
+            put("message_type", "text")
+            put("vibration_intensity", MyBluetoothManager.getVibrationIntensity())
+            put("sucking_intensity", MyBluetoothManager.getSuckingIntensity())
+            put("use_ai_intensity", MyBluetoothManager.connectedDevice != null)
+        }.toString()
+
+        // 调用 NetworkModule 中我们之前定义的 POST SSE 方法
+        return NetworkModule.createPostSseConnection(
+            "api/chat/send_message_stream",
+            jsonRequest,
+            listener
         )
     }
 

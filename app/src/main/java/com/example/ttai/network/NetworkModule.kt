@@ -1,6 +1,7 @@
 package com.example.ttai.network
 
 import android.content.Context
+import android.util.Log
 import com.example.ttai.network.repository.AuthRepository
 import com.example.ttai.network.repository.CharacterRepository
 import com.example.ttai.network.repository.ChargeMoneyRepository
@@ -17,9 +18,16 @@ import com.example.ttai.utils.DebugUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.ResponseBody
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import okhttp3.sse.EventSources
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -128,30 +136,99 @@ object NetworkModule {
         
         newResponse
     }
-
-    fun provideRetrofit(): Retrofit {
-        val logging = HttpLoggingInterceptor().apply { 
-            level = HttpLoggingInterceptor.Level.BODY 
+    val sseListener = object : EventSourceListener() {
+        override fun onOpen(eventSource: EventSource, response: Response) {
+            // 连接成功建立
+            Log.d("SSE", "Connection Opened")
         }
-        
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(authInterceptor) // 添加认证拦截器
-            .addInterceptor(customLoggingInterceptor) // 添加自定义日志拦截器
-            .addInterceptor(logging) // 保留原有的HttpLoggingInterceptor
+
+        override fun onEvent(eventSource: EventSource, id: String?, type: String?, data: String) {
+            // 接收到消息
+            // type 对应服务端的 event 字段，data 对应服务端 data 字段
+            Log.d("SSE", "Received event: $data")
+        }
+
+        override fun onClosed(eventSource: EventSource) {
+            // 连接关闭
+            Log.d("SSE", "Connection Closed")
+        }
+
+        override fun onFailure(eventSource: EventSource, t: Throwable?, response: Response?) {
+            // 出错，通常在这里处理重连逻辑
+            Log.e("SSE", "Error: ${t?.message}")
+        }
+    }
+
+    // 提取公共的 OkHttpClient 配置
+    private fun getBaseOkHttpClientBuilder(): OkHttpClient.Builder {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(customLoggingInterceptor)
+            .addInterceptor(logging)
+    }
+
+    // 提供给 Retrofit 使用的 Client (带超时控制)
+    private fun provideOkHttpClient(): OkHttpClient {
+        return getBaseOkHttpClientBuilder()
             .connectTimeout(180, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS)
             .build()
+    }
 
+    // 提供给 SSE 使用的 Client：不能复用带 customLoggingInterceptor 的 Builder
+    // customLoggingInterceptor 会 responseBody.string() 把整个 SSE 流读完后才返回，导致无法边收边渲染
+    private fun provideSseOkHttpClient(): OkHttpClient {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.HEADERS
+        }
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(logging)
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .readTimeout(0, TimeUnit.SECONDS)
+            .build()
+    }
+
+    fun provideRetrofit(): Retrofit {
         val customGson: Gson = GsonBuilder()
             .registerTypeAdapterFactory(NullStringToEmptyObjectAdapterFactory())
             .create()
+
         return Retrofit.Builder()
-            .baseUrl("https://becomestar.com.cn/")
-            //.baseUrl( "http://34.143.193.85:5000/")
-            .client(okHttpClient)
+            .baseUrl("https://becomestar.com.cn/") // 使用你定义的动态 URL
+            .client(provideOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create(customGson))
             .build()
+    }
+
+    /**
+     * 创建并开启 POST 方式的 SSE 连接
+     * @param path 请求路径
+     * @param jsonBody 请求体 JSON 字符串
+     * @param listener 监听器
+     */
+    fun createPostSseConnection(path: String, jsonBody: String, listener: EventSourceListener): EventSource {
+        val baseUrl = "https://becomestar.com.cn/"
+        val fullUrl = if (baseUrl.endsWith("/") || path.startsWith("/")) "$baseUrl$path" else "$baseUrl/$path"
+
+        // 构建 RequestBody
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val body = jsonBody.toRequestBody(mediaType)
+
+        val request = Request.Builder()
+            .url(fullUrl)
+            .post(body) // 使用 POST 请求
+            .header("Accept", "text/event-stream")
+            .header("Cache-Control", "no-cache")
+            .build()
+
+        // 使用专门的 SSE Client (readTimeout 为 0)
+        val factory = EventSources.createFactory(provideSseOkHttpClient())
+        return factory.newEventSource(request, listener)
     }
 
     inline fun <reified T> createService(): T {

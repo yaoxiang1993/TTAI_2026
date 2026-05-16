@@ -72,6 +72,7 @@ object Deps {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val okhttp = "com.squareup.okhttp3:okhttp:${Versions.okhttp}"
+    const val okhttpsse = "com.squareup.okhttp3:okhttp-sse:${Versions.okhttp}"
     const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.okhttp}"
     const val gson = "com.google.code.gson:gson:${Versions.gson}"
 
@@ -215,6 +216,7 @@ dependencies {
     implementation(Deps.retrofit)
     implementation(Deps.retrofitConverterGson)
     implementation(Deps.okhttp)
+    implementation(Deps.okhttpsse)
     implementation(Deps.okhttpLoggingInterceptor)
     implementation(Deps.gson)
 

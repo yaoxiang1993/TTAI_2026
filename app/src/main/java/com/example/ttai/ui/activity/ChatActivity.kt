@@ -346,26 +346,24 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
             hideLoadingProgressDialog()
         }
 
-        chatAdapter.submitList(state.messages) {
-            val lm = binding.recyclerView.layoutManager as LinearLayoutManager
-            if (keepPositionOnNextUpdate) {
-                // 计算新增数量（前插）并恢复锚点位置
-                val added = state.messages.size - lastMessageCount
-                val targetPos = anchorFirstVisible + added
-                lm.scrollToPositionWithOffset(targetPos, anchorOffset)
-                keepPositionOnNextUpdate = false
-            } else {
-                lm.scrollToPosition(chatAdapter.itemCount - 1)
+        chatAdapter.submitList(state.messages.toList()) {
+            if (state.isTyping && chatAdapter.itemCount > 0) {
+                binding.recyclerView.post {
+                    val lm = binding.recyclerView.layoutManager as? LinearLayoutManager ?: return@post
+                    lm.scrollToPosition(chatAdapter.itemCount - 1)
+                }
             }
-            lastMessageCount = state.messages.size
         }
 
-        // 处理正在输入状态
+        // 更新输入框状态
         if (state.isTyping) {
-            // 显示正在输入的状态，但不禁用输入框
-            binding.etMessage.hint = "正在发送..."
+            // 建议：流式传输时禁用发送按钮，防止请求堆叠
+            binding.tvSendMessage.isEnabled = false
+            binding.tvSendMessage.alpha = 0.5f
+            binding.etMessage.hint = "角色正在思考中..."
         } else {
-            // 恢复正常状态
+            binding.tvSendMessage.isEnabled = true
+            binding.tvSendMessage.alpha = 1.0f
             binding.etMessage.hint = "发送信息给他/她吧~~"
         }
 

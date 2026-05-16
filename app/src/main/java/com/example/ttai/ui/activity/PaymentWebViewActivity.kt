@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -59,6 +60,10 @@ class PaymentWebViewActivity : AppCompatActivity() {
             webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                     val url = request?.url?.toString()
+                    //alipays://platformapi/startApp?appId=20000125&orderSuffix=h5_route_token%3D%22RZZFB00Iha4mqma7Fry9cKuPtGg9I5mobilecashierRZZFB00%22%26is_h5_route%3D%22true%22%26h5_route_senior%3D%22true%22%26h5_route_date%3D%221778906944831%22%26h5_route_sign%3D%22%22
+                    //alipays://platformapi/startApp?appId=20000125&orderSuffix=h5_route_token%3D%22RZZFB00RzmkF3git9N7nVmauQBMN50mobilecashierRZZFB00%22%26is_h5_route%3D%22true%22%26h5_route_senior%3D%22true%22%26h5_route_date%3D%221778906991752%22%26h5_route_sign%3D%22%22
+                    // https://becomestar.com.cn/?charset=utf-8&out_trade_no=blindbox_99582_1778906987_6d920555&method=alipay.trade.wap.pay.return&total_amount=0.01&sign=DjCN0dUJGhdH1n8jUYwBPKih%2BJU%2FWjgFAgsDHVt9mHoF540NhsQd9ct0DvS5dm8JP%2B0dHRPCPx2LAOMJcYKqDIO4Mf7cFexG6mHV0JnaeyAERcnhi2WeHwG5UFZveaZCJ4qiONhvelIDOYn8jGU8imsX1fBSIufxXlfyIwpS%2FDv2tK2DJEY1n35uXtIkZVfVyia7jor%2FjtfwazxN0O79bwHgYEolCq4fwaN7qYFLi%2FSN80XbupIu8xfNTqHZIFAOKPbQnbKAEQoL%2FxJQ2vQ6aqRdx5BSJtxMM1ta3hbhBV%2BGq4zgNv3TuNwAQVVLNo%2FChWXNwvhiDqN162WdArRh7w%3D%3D&trade_no=2026051623001490251444956509&auth_app_id=2021005186688433&version=1.0&app_id=2021005186688433&sign_type=RSA2&seller_id=2088151332669992&timestamp=2026-05-16+12%3A50%3A39
+                    Log.e("YXTEST"," shouldOverrideUrlLoading   ${url}")
                     url?.let { 
                         // 先处理URL跳转逻辑
                         handleUrl(it)

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
 import com.example.ttai.utils.LayoutUtils
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -113,7 +113,7 @@ abstract class BaseMviActivity<I : MviIntent, S : MviState, VM : MviViewModel<I,
 
     private fun observeState() {
         lifecycleScope.launch {
-            viewModel.state.collectLatest { state ->
+            viewModel.state.collect { state ->
                 render(state)
             }
         }

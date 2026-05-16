@@ -22,6 +22,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Response
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import org.json.JSONObject
 import java.util.UUID
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -30,6 +34,7 @@ class ChatViewModel(
     private val context: Context
 ) : MviViewModel<ChatIntent, ChatState>() {
     private val chatRepository = ChatRepository(context)
+    private var sseEventSource: EventSource? = null
     private var characterRepository: CharacterRepository = CharacterRepository(apiService,context)
     val reloadMessage = Message(
         id = "",
@@ -58,14 +63,15 @@ class ChatViewModel(
     }
 
     override fun processIntent(intent: ChatIntent) {
+        if (intent is ChatIntent.SendMessage) {
+            sendMessageStream(intent.content)
+            return
+        }
         viewModelScope.launch {
             when (intent) {
                 is ChatIntent.LoadMessages -> {
                     currentPage = 1
                     loadMessages(intent.conversationId, page = currentPage)
-                }
-                is ChatIntent.SendMessage -> {
-                    sendMessage(intent.content)
                 }
                 is ChatIntent.ClearMessage -> {
                     characterId?.let { clearMessages(it) }
@@ -95,9 +101,11 @@ class ChatViewModel(
                 is ChatIntent.UpdateMessage -> {
                     updateMessage(intent.content,intent.messageId)
                 }
-
                 is ChatIntent.RegenerateMessage -> {
                     regenerateMessage()
+                }
+                is ChatIntent.SendMessage -> {
+                    sendMessage(intent.content)
                 }
             }
         }
@@ -112,7 +120,11 @@ class ChatViewModel(
             val messagesData = chatRepository.fetchMessages(conversationId, page = page, limit = pageSize)
             _state.value = _state.value.copy(
                 isLoading = false,
-                messages = loadMessages(messagesData.messages),
+                messages = if (_state.value.isTyping) {
+                    _state.value.messages
+                } else {
+                    loadMessages(messagesData.messages)
+                },
                 isClearMessages = false,
                 currentUser = "You",
                 total_pages = messagesData.totalPages
@@ -400,6 +412,151 @@ class ChatViewModel(
         } // viewModelScope.launch 结束
     }
 
+    private fun sendMessageStream(content: String) {
+        if (content.isBlank() || characterId.isNullOrEmpty()) return
+        if (state.value.isTyping) return
+
+        sseEventSource?.cancel()
+
+        val userMessageId = UUID.randomUUID().toString()
+        val userTimestamp = generateUniqueTimestamp()
+        val tempUserMessage = Message(
+            id = userMessageId,
+            content = content,
+            sender = "user",
+            timestamp = userTimestamp
+        )
+
+        val aiMessageId = UUID.randomUUID().toString()
+        val tempAiMessage = Message(
+            id = aiMessageId,
+            content = "",
+            sender = "character",
+            timestamp = generateUniqueTimestamp(),
+            isTyping = true
+        )
+
+        applyOptimisticMessages(tempUserMessage, tempAiMessage)
+
+        val sseListener = object : EventSourceListener() {
+            private var accumulatedContent = ""
+
+            override fun onEvent(eventSource: EventSource, id: String?, type: String?, data: String) {
+                val json = JSONObject(data)
+                Log.d("SSE", "onEvent  ${type}  content  ${json.optString("content")}  ")
+                when (type) {
+                    "start" -> {
+                        val userMsgJson = json.optJSONObject("data")?.optJSONObject("user_message")
+                        val serverUserId = userMsgJson?.optString("id")
+                        if (!serverUserId.isNullOrEmpty()) {
+                            updateMessageIdInList(userMessageId, serverUserId)
+                        }
+                        Log.d("SSE", "开始回复")
+                    }
+                    "delta" -> {
+                        val newChunk = json.optString("content")
+                        if (newChunk.isEmpty()) return
+                        accumulatedContent += newChunk
+                        updateMessageInList(aiMessageId, accumulatedContent)
+                    }
+                    "finish" -> {
+                        val finalData = json.optJSONObject("data")
+                        val aiMsgJson = finalData?.optJSONObject("ai_message")
+
+                        val finalAiMessage = Message(
+                            id = aiMsgJson?.optString("id") ?: aiMessageId,
+                            content = aiMsgJson?.optString("content") ?: accumulatedContent,
+                            sender = "character",
+                            timestamp = aiMsgJson?.optLong("timestamp") ?: 0L,
+                            message_type = aiMsgJson?.optString("message_type") ?: "text",
+                            isTyping = false
+                        )
+
+                        val vib = finalData?.optInt("vibration_intensity") ?: 0
+                        val suck = finalData?.optInt("sucking_intensity") ?: 0
+                        MyBluetoothManager.writeCharacteristicUp(vib, suck)
+
+                        replaceMessageInList(aiMessageId, finalAiMessage)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _state.value = _state.value.copy(isTyping = false)
+                        }
+                    }
+                    "error" -> {
+                        handleError(json.optString("message"), aiMessageId)
+                    }
+                    else -> {
+                        Log.w("SSE", "未处理的事件类型: $type, data=$data")
+                    }
+                }
+            }
+
+            override fun onFailure(eventSource: EventSource, t: Throwable?, response: Response?) {
+                handleError(t?.message ?: "网络异常", aiMessageId)
+            }
+        }
+
+        sseEventSource = chatRepository.sendMessageStream(characterId!!, content, sseListener)
+    }
+
+    private fun applyOptimisticMessages(vararg newMessages: Message) {
+        val merged = loadMessages(_state.value.messages + newMessages)
+        _state.value = _state.value.copy(messages = merged, isTyping = true)
+    }
+
+    private fun updateMessageIdInList(localId: String, serverId: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val updated = _state.value.messages.map { msg ->
+                if (msg.id == localId) msg.copy(id = serverId, _id = serverId) else msg
+            }
+            _state.value = _state.value.copy(messages = loadMessages(updated))
+        }
+    }
+
+    private fun updateMessageInList(targetId: String, fullContent: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val currentMessages = loadMessages(
+                _state.value.messages.map {
+                    if (it.id == targetId) {
+                        it.copy(
+                            content = fullContent,
+                            isTyping = fullContent.isBlank()
+                        )
+                    } else {
+                        it
+                    }
+                }
+            )
+            _state.value = _state.value.copy(messages = currentMessages)
+        }
+    }
+
+    private fun handleError(msg: String, targetId: String?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            ToastUtils.showError(context, msg)
+            _state.value = _state.value.copy(
+                isTyping = false,
+                messages = loadMessages(
+                    _state.value.messages.filter { it.id != targetId && !it.isTyping }
+                )
+            )
+        }
+    }
+
+    private fun replaceMessageInList(targetId: String, newMessage: Message) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val currentMessages = _state.value.messages.map {
+                if (it.id == targetId) newMessage else it
+            }
+            _state.value = _state.value.copy(messages = loadMessages(currentMessages))
+        }
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        sseEventSource?.cancel() // 关键：防止泄露
+    }
+
     /**
      * 清除消息
      */
@@ -468,7 +625,11 @@ class ChatViewModel(
             character = defaultCharacter
             _state.value = _state.value.copy(
                 isLoadingDefaultChat = false,
-                messages = loadMessages(defaultCharacterChatData.messages) ,
+                messages = if (_state.value.isTyping) {
+                    _state.value.messages
+                } else {
+                    loadMessages(defaultCharacterChatData.messages)
+                },
                 isClearMessages = false,
                 character = defaultCharacter
             )

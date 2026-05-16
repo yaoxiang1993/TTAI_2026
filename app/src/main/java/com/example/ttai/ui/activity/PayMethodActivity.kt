@@ -33,6 +33,9 @@ class PayMethodActivity : AppCompatActivity() {
             }
 
         }
+        findViewById<ImageView>(R.id.ivBack).setOnClickListener {
+            finish()
+        }
         val payUrl = intent.getStringExtra(EXTRA_PAY_URL)
         val orderId = intent.getStringExtra(EXTRA_ORDER_ID)
         findViewById<TextView>(R.id.tvPay).setOnClickListener {
@@ -55,6 +58,7 @@ class PayMethodActivity : AppCompatActivity() {
                 Activity.RESULT_OK -> {
                     // 支付成功，刷新用户余额
                     ToastUtils.showShort(this, "支付成功！")
+                    setResult(RESULT_OK)
                     finish()
                 }
                 Activity.RESULT_CANCELED -> {
