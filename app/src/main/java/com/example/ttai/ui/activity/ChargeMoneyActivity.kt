@@ -120,12 +120,15 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
             EventBus.getDefault().post(UserBalanceUpdateEvent())
             finish()
         }
-        isBuyBlindBox = state.isBuyBlindBox == true
-        orderId = state.orderId.toString()
-        // 处理支付URL
+        if (state.isBuyBlindBox == true) {
+            isBuyBlindBox = true
+        }
+        if (state.openImmediately == true) {
+            openImmediately = true
+        }
+        state.orderId?.let { orderId = it }
         if (!state.payUrl.isNullOrEmpty()) {
-            openPaymentWebView(state.payUrl, state.orderId )
-            // 清除支付URL状态，避免重复打开
+            openPaymentWebView(state.payUrl, state.orderId)
             sendIntent(ChargeMoneyIntent.ClearPayUrl)
         }
         
@@ -162,20 +165,23 @@ class ChargeMoneyActivity : BaseMviActivity<ChargeMoneyIntent, ChargeMoneyState,
         if (requestCode == REQUEST_CODE_PAYMENT) {
             when (resultCode) {
                 Activity.RESULT_OK -> {
-                    // 支付成功，刷新用户余额
                     EventBus.getDefault().post(UserBalanceUpdateEvent())
-                    ToastUtils.showShort(this, "支付成功！")
-                    if (isBuyBlindBox && openImmediately){
+                    val paidOrderId = data?.getStringExtra(PaymentWebViewActivity.EXTRA_ORDER_ID)
+                        ?.takeIf { it.isNotBlank() }
+                        ?: orderId
+                    if (paidOrderId.isNotBlank()) {
+                        orderId = paidOrderId
+                    }
+                    if (isBuyBlindBox && openImmediately) {
                         isBuyBlindBox = false
                         openImmediately = false
-                        // 购买的盲盒，并且立即打开
                         sendIntent(ChargeMoneyIntent.BlindBoxOrderResult(orderId))
-                    }else{
+                    } else {
                         finish()
                     }
                 }
                 Activity.RESULT_CANCELED -> {
-                    // 支付取消或失败，不做处理
+                    // 支付取消或失败
                 }
             }
         }

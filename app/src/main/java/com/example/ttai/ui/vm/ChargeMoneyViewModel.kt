@@ -125,7 +125,7 @@ class ChargeMoneyViewModel(private val context: Context) : MviViewModel<ChargeMo
     }
 
     private fun clearPayUrl() {
-        _state.value = _state.value.copy(payUrl = null, orderId = null)
+        _state.value = _state.value.copy(payUrl = null)
     }
     private fun clearShowBlindBox() {
         _state.value = _state.value.copy(isShowBlindBox = false)

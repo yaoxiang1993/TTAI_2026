@@ -54,17 +54,8 @@ class PayMethodActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PAYMENT) {
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    // 支付成功，刷新用户余额
-                    ToastUtils.showShort(this, "支付成功！")
-                    setResult(RESULT_OK)
-                    finish()
-                }
-                Activity.RESULT_CANCELED -> {
-                    // 支付取消或失败，不做处理
-                }
-            }
+            setResult(resultCode, data)
+            finish()
         }
     }
 }
