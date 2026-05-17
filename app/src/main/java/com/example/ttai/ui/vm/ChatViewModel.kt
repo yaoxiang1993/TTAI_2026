@@ -234,7 +234,7 @@ class ChatViewModel(
                     sender = "character",
                     timestamp = result.timestamp,
                     _id = result.message_id,
-                    id = result.message_id,
+                    id = result.message_id?:"",
                     message_type = result.message_type?:"text"
                 )
                 Log.e("","YXTEST newMessage ${JsonUtils.toJson(newMessage)} ")
@@ -519,7 +519,8 @@ class ChatViewModel(
                     if (it.id == targetId) {
                         it.copy(
                             content = fullContent,
-                            isTyping = fullContent.isBlank()
+                            // 必须强行保持 true，确保在整个 SSE delta 接收过程中系统认定仍在输入
+                            isTyping = true
                         )
                     } else {
                         it
