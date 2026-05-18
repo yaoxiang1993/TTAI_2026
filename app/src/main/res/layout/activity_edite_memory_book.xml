@@ -63,7 +63,7 @@
             android:background="@android:color/transparent"
             android:gravity="start"
             android:hint="请编辑你的记忆簿"
-            android:maxLength="2000"
+            android:maxLength="3000"
             android:textColor="@color/white"
             android:textColorHint="@color/color_6b6b6b"
             android:textSize="14sp"
