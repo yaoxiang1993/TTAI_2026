@@ -209,8 +209,21 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         binding.ivBack.setOnClickListener {
             onBackPressed()
         }
+        //
+        binding.ivAdd.setOnClickListener {
+          // 显示副功能
+            binding.tvVideoChat.isVisible = !binding.tvVideoChat.isVisible
+        }
         binding.tvSendMessage.setOnClickListener {
             sendMessage()
+        }
+        binding.tvVideoChat.setOnClickListener {
+            if (binding.tvVideoChat.isVisible){
+                val intent = Intent(this, VideoCallActivity::class.java).apply {
+                    putExtra(Constants.CHARACTER_KEY, viewModel.character)
+                }
+                startActivity(intent)
+            }
         }
         binding.ivReload.setOnClickListener {
             // 清除聊天记录

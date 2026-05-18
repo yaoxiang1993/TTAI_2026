@@ -9,16 +9,18 @@
     >
 
     <!-- 背景图片 -->
+
+
+    <!-- 顶部工具栏 -->
     <ImageView
         android:id="@+id/iv_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@mipmap/icon_defult_loading_big"
-        />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
-
-    <!-- 顶部工具栏 -->
     <RelativeLayout
         android:id="@+id/rlyTitle"
         android:layout_width="0dp"
@@ -29,33 +31,6 @@
         android:layout_marginTop="15dp"
         android:paddingTop="24dp"
         android:paddingBottom="8dp">
-
-        <ImageView
-            android:id="@+id/ivBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:padding="5dp"
-            android:src="@mipmap/icon_arrow_left_white" />
-
-        <LinearLayout
-            android:id="@+id/llyHeard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_b3383838_r50"
-            android:paddingStart="10dp"
-            android:gravity="center_vertical"
-            android:paddingEnd="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
-            <ImageView
-                android:id="@+id/ivHeard"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@mipmap/icon_heard_cricle" />
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
@@ -64,7 +39,6 @@
                 android:layout_marginStart="10dp"
                 android:textSize="14sp"
                 android:textColor="@color/white" />
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -78,11 +52,6 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
             <ImageView
-                android:id="@+id/ivReload"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@mipmap/icon_reload" />
-            <ImageView
                 android:id="@+id/ivMenu"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
@@ -90,26 +59,73 @@
                 android:src="@mipmap/icon_menu" />
         </LinearLayout>
     </RelativeLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/rlyTitle"
-        app:layout_constraintBottom_toTopOf="@+id/input_container"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-    <!-- 聊天内容区域 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tvVideoTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="与角色通话将消耗 1 仙玉/秒"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp"
+        android:textSize="12sp"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/ivHeard"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="120dp"
+        android:src="@mipmap/icon_heard_cricle" />
+
+    <TextView
+        android:id="@+id/tvName1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="化世豪"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/ivHeard"
+        app:layout_constraintStart_toStartOf="@+id/ivHeard"
+        app:layout_constraintEnd_toEndOf="@+id/ivHeard"
+        android:textSize="24sp"
+        android:textColor="@color/white" />
+    <TextView
+        android:id="@+id/tvConnectTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="邀请你视频通话"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvName1"
+        app:layout_constraintStart_toStartOf="@+id/ivHeard"
+        app:layout_constraintEnd_toEndOf="@+id/ivHeard"
+        android:textSize="14sp"
+        android:textColor="@color/color_b4b4b4" />
+
+
+    <ImageView
+        android:id="@+id/ivPhoneConnect"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="130dp"
+        android:layout_marginEnd="70dp"
+        android:src="@mipmap/icon_phone_connected" />
+    <ImageView
+        android:id="@+id/ivPhoneHangUp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="130dp"
+        android:layout_marginStart="70dp"
+        android:src="@mipmap/icon_phone_hang_up" />
+
+    <LinearLayout
         android:id="@+id/input_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -121,15 +137,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/color_000000">
+        android:background="@android:color/transparent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clySendMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/bg_b3383838_r10"
             >
         <EditText
@@ -167,37 +179,14 @@
             android:textSize="14sp"
             android:padding="4dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="发送"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
-            <ImageView
-                android:id="@+id/iv_add"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                app:layout_constraintStart_toEndOf="@+id/tvSendMessage"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvSendMessage"
-                android:src="@mipmap/icon_add_v1"
-                />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <TextView
-            android:id="@+id/tv_video_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:drawableTopCompat="@mipmap/icon_video_chat"
-            app:layout_constraintTop_toBottomOf="@+id/clySendMessage"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="视频通话"
-            android:textSize="12sp"
-            android:textColor="@color/color_e6d6d"
-            android:visibility="gone"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

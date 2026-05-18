@@ -2,4 +2,5 @@
 <resources>
     <!-- 虚拟导航栏适配Tag ID -->
     <item name="navigation_bar_adapter_tag" type="id" />
+    <item name="iv_add" type="id">iv_add</item>
 </resources>

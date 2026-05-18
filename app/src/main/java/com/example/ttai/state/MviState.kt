@@ -534,3 +534,7 @@ data class NotifyDetailsState(
     val saveSuccess: Boolean = false,
     val errorMessage: String? = null
 ) : MviState
+
+data class VideoCallState(
+    val isConnect: Boolean = false,
+) : MviState

@@ -356,3 +356,6 @@ sealed class NotifyListIntent : MviIntent {
 sealed class NotifyDetailsIntent : MviIntent {
     data class notificationsMarkRead(val notifyEntity: NotificationsEntity?) : NotifyDetailsIntent()
 }
+sealed class VideoCallIntent : MviIntent {
+    object ConnectVideo : VideoCallIntent()
+}
