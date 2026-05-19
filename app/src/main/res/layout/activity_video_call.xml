@@ -7,10 +7,6 @@
     android:layout_height="match_parent"
     android:id="@+id/clyGroup"
     >
-
-    <!-- 背景图片 -->
-
-
     <!-- 顶部工具栏 -->
     <ImageView
         android:id="@+id/iv_background"
@@ -20,45 +16,53 @@
         android:src="@mipmap/icon_defult_loading_big"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
-
-    <RelativeLayout
-        android:id="@+id/rlyTitle"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="15dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="8dp">
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="化世豪"
-                android:layout_marginStart="10dp"
-                android:textSize="14sp"
-                android:textColor="@color/white" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:text="化世豪" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_b3383838_r50"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
-            <ImageView
-                android:id="@+id/ivMenu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="10dp"
-                android:src="@mipmap/icon_menu" />
-        </LinearLayout>
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        tools:text="10:10" />
+    <ImageView
+        android:id="@+id/ivMenu"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="10dp"
+        android:src="@mipmap/icon_chat_blue_tooth" />
+
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvName"
+        tools:text="说话中..."
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/tvVideoTip"
@@ -106,6 +110,31 @@
         android:textColor="@color/color_b4b4b4" />
 
 
+
+    <TextView
+        android:id="@+id/tvChatMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ivPhoneConnect"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="40dp"
+        android:gravity="center"
+        android:layout_marginEnd="40dp"
+        android:textColor="@color/color_9a9b9f"
+        android:textSize="12sp"
+        android:layout_marginBottom="30dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        tools:text="(突然伸手扣住你的手腕，冰凉的金属触感贴着你
+温热的皮肤。)怎么？最近总往我办公室跑...(嘴角
+勾起一抹若有似无的冷笑）
+" />
+
+
     <ImageView
         android:id="@+id/ivPhoneConnect"
         android:layout_width="70dp"
@@ -113,7 +142,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="130dp"
-        android:layout_marginEnd="70dp"
+        android:layout_marginEnd="60dp"
         android:src="@mipmap/icon_phone_connected" />
     <ImageView
         android:id="@+id/ivPhoneHangUp"
@@ -124,6 +153,30 @@
         android:layout_marginBottom="130dp"
         android:layout_marginStart="70dp"
         android:src="@mipmap/icon_phone_hang_up" />
+
+    <TextView
+        android:id="@+id/tvClickStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="25dp"
+        android:textColor="@color/color_9a9b9f"
+        android:textSize="14sp"
+        android:layout_marginBottom="150dp"
+        android:text="点击打断" />
+
+    <ImageView
+        android:id="@+id/ivKeyboard"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="30dp"
+        android:src="@mipmap/icon_keyboard" />
 
     <LinearLayout
         android:id="@+id/input_container"
@@ -182,9 +235,19 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="发送"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivMicrophone"
             />
+
+            <ImageView
+                android:id="@+id/ivMicrophone"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvSendMessage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvSendMessage"
+                android:src="@mipmap/icon_microphone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
