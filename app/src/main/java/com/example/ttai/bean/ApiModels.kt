@@ -1622,10 +1622,10 @@ data class AppUpdateInfo(
     val latestVersion: String,
 
     @SerializedName("latest_build")
-    val latestBuild: Int,
+    val latestBuild: Long =0,
 
     @SerializedName("min_supported_build")
-    val minSupportedBuild: Int,
+    val minSupportedBuild: Int?,
 
     @SerializedName("title")
     val title: String,

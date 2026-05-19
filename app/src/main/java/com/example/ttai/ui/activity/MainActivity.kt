@@ -28,8 +28,11 @@ import com.example.ttai.ui.vm.MainActivityViewModel
 import com.example.ttai.ui.vm.MainActivityViewModelFactory
 import com.example.ttai.ui.vm.MainFragmentViewModelFactory
 import com.example.ttai.utils.AppUpdater
+import com.example.ttai.utils.AppUtils
+import com.example.ttai.utils.MMKVUtils
 import com.example.ttai.utils.ToastUtils
 import java.util.ArrayList
+import kotlin.let
 
 class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, MainActivityViewModel, ActivityMainBinding>() {
     override val viewModel: MainActivityViewModel by viewModels{ MainActivityViewModelFactory(this) }
@@ -91,6 +94,9 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
                     }?:{
                         ToastUtils.showShort(this@MainActivity,"下载链接获取失败")
                     }
+                    if (appUpdateInfo?.forceUpdate == true) {
+                        finishAffinity()
+                    }
                 }
 
                 override fun onNegativeClick() {
@@ -102,7 +108,7 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
             })
 
         // 如果是强制更新，禁止点击弹窗外部取消
-        dialog.setCancelable(false)
+        dialog.setCancelable(appUpdateInfo?.forceUpdate == true)
         dialog.show(supportFragmentManager, "UpdateDialogFragment")
     }
 
@@ -145,13 +151,40 @@ class MainActivity : BaseMviActivity<MainActivityIntent, MainActivityState, Main
         // 更新自定义底部导航栏选中状态
         updateTabSelection(state.currentTabIndex)
         state.appUpdateInfo?.let {
-            if (it.hasUpdate){
-                showUpdateDialog(it)
-                sendIntent(MainActivityIntent.ClearUpdateInfo)
-            }
+            checkAppUpdate(it )
         }
     }
-    
+
+
+    /**
+     * 检测并处理版本更新弹框逻辑
+     *
+     * @param localVersionCode 当前本地的 versionCode (Int)
+     * @param onlineVersionCode 线上最新的 versionCode (Int)
+     * @param isForceUpdate 线上版本是否为强更版本 (Boolean)
+     */
+    fun checkAppUpdate(appUpdateInfo : AppUpdateInfo ) {
+        // 1. 检测当前线上版本是否已经提示过
+        if (MMKVUtils.isVersionPrompted(appUpdateInfo.latestBuild)) {
+            // 如果当前线上版本已经提示过，直接拦截，不再弹框
+            return
+        }
+
+        // 2. 比较本地版本与线上版本
+        if (AppUtils.getLocalVersionCode(this) >= appUpdateInfo.latestBuild) {
+            // 本地已经是最新或更高，不弹框
+            return
+        }
+
+        // 3. 判断是否为强更版本
+        if (appUpdateInfo.forceUpdate) {
+            // 满足所有条件：未提示过 + 本地低 + 线上是强更 -> 触发弹框
+            showUpdateDialog(appUpdateInfo)
+        } else {
+            showUpdateDialog(appUpdateInfo)
+            MMKVUtils.saveVersionPrompted(appUpdateInfo.latestBuild)
+        }
+    }
     /**
      * 设置自定义底部导航栏点击事件
      */

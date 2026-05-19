@@ -77,7 +77,7 @@ class EditeMemoryBookViewModel(private val context: Context) : MviViewModel<Edit
     
     private fun updateName(content: String) {
         val contentLength = content.length
-        val isBriefValid = content.isNotBlank() && contentLength <= 2000
+        val isBriefValid = content.isNotBlank() && contentLength <= 3000
         
         _state.update { 
             it.copy(
@@ -101,10 +101,10 @@ class EditeMemoryBookViewModel(private val context: Context) : MviViewModel<Edit
                 return@launch
             }
             
-            if (currentState.content.length > 2000) {
-                ToastUtils.showError(context, "记忆不能超过2000个字符")
+            if (currentState.content.length > 3000) {
+                ToastUtils.showError(context, "记忆不能超过3000个字符")
                 _state.update { 
-                    it.copy(errorMessage = "记忆不能超过2000个字符")
+                    it.copy(errorMessage = "记忆不能超过3000个字符")
                 }
                 return@launch
             }

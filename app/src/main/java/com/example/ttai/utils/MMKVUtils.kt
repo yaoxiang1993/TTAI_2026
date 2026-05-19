@@ -208,7 +208,24 @@ object MMKVUtils {
         defaultMMKV.removeValueForKey("user_profile_basic")
         defaultMMKV.removeValueForKey("membership_info")
     }
-    
+
+
+    /**
+
+     * @param versionServer 服务器最新的版本号（可以是 VersionCode 字符串或 VersionName，如 "1.0.2"）
+     */
+    fun saveVersionPrompted(onlineVersionCode: Long) {
+        putLong(Keys.IGNORED_VERSION, onlineVersionCode)
+
+    }
+    /**
+     * @param versionServer 该线上版本是否提示过
+     */
+    fun isVersionPrompted(latestBuild: Long): Boolean {
+       return getLong(Keys.IGNORED_VERSION,0L) >=latestBuild
+    }
+
+
     // ==================== 常量定义 ====================
     
     object Keys {
@@ -237,6 +254,10 @@ object MMKVUtils {
         const val APP_VERSION = "app_version"
         const val LAST_UPDATE_TIME = "last_update_time"
         const val CRASH_COUNT = "crash_count"
+
+        // 专门用于版本更新控制的 Key
+        const val IGNORED_VERSION = "ignored_version"       // 上次点击暂不更新的版本号
+        const val IGNORE_TIMESTAMP = "ignore_timestamp"     // 点击暂不更新时的时间戳
     }
     
     object DefaultValues {

@@ -62,7 +62,7 @@ class EditeMemoryBookActivity : BaseMviActivity<EditeMemoryBookIntent, EditeMemo
         }
         
         // 更新字符计数
-        binding.tvNameLength.text = "${state.contentLength}/2000"
+        binding.tvNameLength.text = "${state.contentLength}/3000"
         
         // 更新保存按钮状态
         binding.tvSave.isEnabled = state.isContentValid && !state.isSaving
