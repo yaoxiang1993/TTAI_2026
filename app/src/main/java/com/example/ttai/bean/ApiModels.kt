@@ -245,7 +245,7 @@ data class ConversationsData(
 )
 @kotlinx.parcelize.Parcelize
 data class Message(
-    val id: String? = java.util.UUID.randomUUID().toString(), // 添加唯一ID，避免消息重复
+    val id: String = java.util.UUID.randomUUID().toString(), // 添加唯一ID，避免消息重复
     @SerializedName("_id") var _id: String?="",
     @SerializedName("content") var content: String?="",
     @SerializedName("sender") var sender: String?="", //  "sender": "user|character|lucky_reward",
