@@ -28,5 +28,7 @@ object Constants {
 
     const val OBJECT_KEY = "object_key"
 
-
+    const val PLAY_SPEAKING: String = "play_speaking"
+    const val PLAY_LISTENING: String = "play_listening"
+    const val PLAY_THINKING: String = "play_thinking"
 }

@@ -159,6 +159,7 @@ data class ChatState(
     val isLoadingDefaultChat: Boolean = false,
     val isClearMessages: Boolean = false,
     var total_pages: Int = 1,
+    var fairyJade: Int = 0,
 ) : MviState
 
 data class AcquisitionModeState(
@@ -536,5 +537,9 @@ data class NotifyDetailsState(
 ) : MviState
 
 data class VideoCallState(
-    val isConnect: Boolean = false,
+    val isConnecting: Boolean = false,
+    val isPlaying: Boolean = false,
+    val isMicrophoneOpen: Boolean = true,
+    val playStatus: String = "",
+
 ) : MviState

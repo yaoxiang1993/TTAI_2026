@@ -109,8 +109,6 @@
         android:textSize="14sp"
         android:textColor="@color/color_b4b4b4" />
 
-
-
     <TextView
         android:id="@+id/tvChatMessage"
         android:layout_width="0dp"
@@ -143,11 +141,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="130dp"
         android:layout_marginEnd="60dp"
+        android:scaleType="fitXY"
         android:src="@mipmap/icon_phone_connected" />
     <ImageView
         android:id="@+id/ivPhoneHangUp"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginBottom="130dp"

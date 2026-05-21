@@ -8,6 +8,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.ttai.R
 import com.example.ttai.base.BaseMviActivity
 import com.example.ttai.base.viewBinding
@@ -17,9 +20,10 @@ import com.example.ttai.utils.Constants
 import com.example.ttai.utils.KeyboardManager
 import com.example.ttai.utils.LayoutUtils
 import com.example.ttai.databinding.ActivityVideoCallBinding
-import com.example.ttai.intent.UserHomeIntent
+import com.example.ttai.intent.AIDetailsIntent
 import com.example.ttai.intent.VideoCallIntent
 import com.example.ttai.state.VideoCallState
+import com.example.ttai.ui.dialog.TwoButtonDialogFragment
 import com.example.ttai.ui.vm.VideoCallViewModel
 import com.example.ttai.ui.vm.VideoCallViewModelFactory
 import com.example.ttai.utils.ImageUtils
@@ -60,6 +64,9 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
 
         }
         sendIntent(VideoCallIntent.ConnectVideo)
+        character?.let {
+            loadImage(it.avatarUrl)
+        }
 
     }
 
@@ -92,7 +99,6 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
             val systemInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             if (imeInsets.bottom > 0) {
-
                 // 手动调整输入框位置
                 binding.inputContainer.post {
                     val params = binding.inputContainer.layoutParams as ConstraintLayout.LayoutParams
@@ -126,17 +132,68 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
     override fun render(state: VideoCallState) {
         super.render(state)
 
-        binding.tvVideoTip.isVisible = state.isConnect
-        binding.tvConnectTip.isVisible = state.isConnect
+        binding.tvVideoTip.isVisible = state.isConnecting
+        binding.tvConnectTip.isVisible = state.isConnecting
+        binding.inputContainer.isVisible = !state.isConnecting
+        binding.tvName.isVisible =  !state.isConnecting
+        binding.tvTime.isVisible =  !state.isConnecting
+        binding.ivMenu.isVisible =  !state.isConnecting
+        binding.tvStatus.isVisible =  !state.isConnecting
 
-        binding.rlyTitle.isVisible = !state.isConnect
-        binding.inputContainer.isVisible = !state.isConnect
+        binding.tvVideoTip.isVisible = !state.isPlaying
+        binding.tvName.isVisible =  state.isPlaying
+        binding.tvTime.isVisible =  state.isPlaying
+        binding.ivMenu.isVisible =  state.isPlaying
+        binding.tvStatus.isVisible =  state.isPlaying
+        if (state.isConnecting){
+            binding.ivPhoneConnect.setImageResource(R.mipmap.icon_phone_connected)
+        }
+        if (state.isPlaying) {
+            binding.ivPhoneConnect.setImageResource(
+                if (state.isMicrophoneOpen) {
+                    R.mipmap.icon_enable_voice
+                } else {
+                    R.mipmap.icon_unenable_voice
+                }
+            )
+        }
+        binding.tvStatus.text = when (state.playStatus) {
+            Constants.PLAY_SPEAKING -> "说话中..."
+            Constants.PLAY_LISTENING -> "聆听中..."
+            Constants.PLAY_THINKING -> "思考中..."
+            else -> "" // 或者保留原样 binding.tvStatus.text
+        }
 
     }
     /**
      * 加载背景图片
      */
-    private fun loadBackgroundImage(imageUrl: String) {
+    private fun loadImage(imageUrl: String?) {
         ImageUtils.loadImageToBG(this,imageUrl,binding.ivBackground)
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(android.R.drawable.ic_menu_gallery)
+            .error(android.R.drawable.ic_menu_report_image)
+            .transform(CenterCrop(), CircleCrop())
+            .into(binding.ivHeard)
+    }
+    /**
+     * 结束本次通话
+     */
+    private fun showStopChatDialog() {
+        val dialog = TwoButtonDialogFragment.newInstance(
+            message = "是否结束本次通话\n",
+            positiveText = "确认",
+            negativeText = "取消"
+        ).setOnButtonClickListener(object : TwoButtonDialogFragment.OnButtonClickListener {
+            override fun onPositiveClick() {
+              finish()
+            }
+
+            override fun onNegativeClick() {
+                // 取消操作
+            }
+        })
+        dialog.show(supportFragmentManager, "showStopChatDialog")
     }
 }

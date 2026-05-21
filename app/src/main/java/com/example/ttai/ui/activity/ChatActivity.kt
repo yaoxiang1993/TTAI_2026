@@ -219,10 +219,14 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         }
         binding.tvVideoChat.setOnClickListener {
             if (binding.tvVideoChat.isVisible){
+
+                sendIntent(ChatIntent.getCurrencyBalance)
                 val intent = Intent(this, VideoCallActivity::class.java).apply {
                     putExtra(Constants.CHARACTER_KEY, viewModel.character)
                 }
                 startActivity(intent)
+
+
             }
         }
         binding.ivReload.setOnClickListener {
@@ -502,5 +506,28 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         } catch (e: Exception) {
             Log.w("ChatActivity", "EventBus注销失败: ${e.message}")
         }
+    }
+
+    /**
+     * 结束本次通话
+     */
+    private fun showChargeMoneyDialog() {
+        val dialog = TwoButtonDialogFragment.newInstance(
+            message = "为保证与角色通话的体验，\n" +
+                    "\n" +
+                    "仙玉数量至少要20个以上哦~\n",
+            positiveText = "去充值",
+            negativeText = "取消"
+        ).setOnButtonClickListener(object : TwoButtonDialogFragment.OnButtonClickListener {
+            override fun onPositiveClick() {
+                val intent = Intent(this@ChatActivity, ChargeMoneyActivity::class.java)
+                startActivity(intent)
+            }
+
+            override fun onNegativeClick() {
+                // 取消操作
+            }
+        })
+        dialog.show(supportFragmentManager, "showStopChatDialog")
     }
 }

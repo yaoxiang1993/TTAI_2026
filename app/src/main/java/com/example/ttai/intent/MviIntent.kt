@@ -134,6 +134,8 @@ sealed class ChatIntent : MviIntent {
 
     data class UpdateMessage(val content: String,val messageId: String?) : ChatIntent()
 
+    object getCurrencyBalance : ChatIntent()
+
 }
 /**
  * 采集模式界面的 MVI 意图，定义用户操作

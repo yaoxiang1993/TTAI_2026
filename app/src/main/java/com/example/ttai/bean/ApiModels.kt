@@ -437,8 +437,8 @@ data class CurrencyBalanceResponse(
 )
 
 data class CurrencyBalanceData(
-    @SerializedName("fairy_jade") val fairyJade: Int,
-    @SerializedName("fairy_shells") val fairyShells: Int
+    @SerializedName("fairy_jade") val fairyJade: Int,  // 仙玉
+    @SerializedName("fairy_shells") val fairyShells: Int // 仙贝
 )
 
 data class AiModel(

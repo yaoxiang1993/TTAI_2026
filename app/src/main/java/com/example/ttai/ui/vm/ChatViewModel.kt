@@ -10,6 +10,7 @@ import com.example.ttai.bean.Message
 import com.example.ttai.bean.SimpleMessage
 import com.example.ttai.intent.ChatIntent
 import com.example.ttai.network.ApiService
+import com.example.ttai.network.NetworkModule
 import com.example.ttai.network.exception.ApiException
 import com.example.ttai.network.repository.CharacterRepository
 import com.example.ttai.network.repository.ChatRepository
@@ -36,6 +37,8 @@ class ChatViewModel(
     private val chatRepository = ChatRepository(context)
     private var sseEventSource: EventSource? = null
     private var characterRepository: CharacterRepository = CharacterRepository(apiService,context)
+
+    private val myFragmentRepository = NetworkModule.provideMyFragmentRepository(context)
     val reloadMessage = Message(
         id = "",
         content = "",
@@ -107,10 +110,30 @@ class ChatViewModel(
                 is ChatIntent.SendMessage -> {
                     sendMessage(intent.content)
                 }
+                is ChatIntent.getCurrencyBalance->{
+                    getCurrencyBalance()
+                }
             }
         }
     }
-    
+
+    /**
+     * 获取货币余额
+     */
+    private suspend fun getCurrencyBalance() {
+        try {
+            val response = myFragmentRepository.getCurrencyBalance()
+            _state.value = _state.value.copy(
+                fairyJade = response.fairyJade,
+                error = null
+            )
+        } catch (e: Exception) {
+            _state.value = _state.value.copy(
+                error = "获取货币余额失败"
+            )
+        }
+    }
+
     /**
      * 加载消息列表
      */
