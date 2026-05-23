@@ -115,6 +115,12 @@ class AISettingActivity : BaseMviActivity<AISettingIntent, AISettingState, AISet
             intent.putExtra(Constants.CONVERSATION_ID_KEY,character?.conversationId)
             startActivity(intent)
         }
+
+        binding.tvVoiceConfig.setOnClickListener {
+            val intent = Intent(this, VoiceConfigListActivity::class.java)
+            intent.putExtra(Constants.CHARACTER_ID_KEY,viewModel.characterId)
+            startActivity(intent)
+        }
         binding.tvProtManager.setOnClickListener {
             showModePicker()
         }

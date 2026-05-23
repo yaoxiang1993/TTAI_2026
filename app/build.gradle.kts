@@ -243,4 +243,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.2")
+
+//    implementation("com.aliyun.aio:AliVCSDK_ARTC:7.10.0")
+//    implementation("com.aliyun.auikits.android:ARTCAICallKit:2.11.0")
+//    implementation("com.alivc.live.component:PluginAEC:2.0.0")
 }

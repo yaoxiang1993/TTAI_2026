@@ -57,7 +57,7 @@ class VideoCallViewModel(
             when (intent) {
                 is VideoCallIntent.ConnectVideo -> {
                     _state.value = _state.value.copy(
-                        isConnect = true
+                        isConnecting = true
                     )
                 }
                 else -> {}

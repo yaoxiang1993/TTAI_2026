@@ -361,3 +361,9 @@ sealed class NotifyDetailsIntent : MviIntent {
 sealed class VideoCallIntent : MviIntent {
     object ConnectVideo : VideoCallIntent()
 }
+
+sealed class VoiceConfigIntent : MviIntent {
+    data class Initialize(val character_id: String?) : VoiceConfigIntent()
+    object SaveVoiceConfig  : VoiceConfigIntent()
+    data class SelectItem(val selectedCode: String) : VoiceConfigIntent()
+}

@@ -27,6 +27,7 @@ import com.example.ttai.bean.ShopItem
 import com.example.ttai.bean.UserProfile
 import com.example.ttai.bean.UserBalance
 import com.example.ttai.bean.RechargePackage
+import com.example.ttai.bean.VoiceConfigData
 import com.google.gson.annotations.SerializedName
 
 data class LoginState(
@@ -543,3 +544,9 @@ data class VideoCallState(
     val playStatus: String = "",
 
 ) : MviState
+
+data class VoiceConfigState(
+    val isLoading: Boolean = false,
+    val voiceConfigData: VoiceConfigData ?= null,
+    val saveVoiceSuccess: Boolean = false,
+    ) : MviState

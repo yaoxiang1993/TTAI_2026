@@ -16,34 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/llyReload"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/bg_383838_r5"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/llyChatSetting">
-
-        <TextView
-            android:id="@+id/ivClearHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableStart="@mipmap/icon_reload"
-            android:drawablePadding="6dp"
-            android:gravity="center"
-            android:paddingStart="20dp"
-            android:paddingEnd="10dp"
-            android:text="重制AI对话"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,6 +26,55 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ivBack" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clyName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:padding="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivHeard"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:src="@mipmap/icon_heard_cricle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivHeard"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="XXXX" />
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:drawableStart="@mipmap/icon_iphone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="小手机" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cly1"
@@ -185,6 +206,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/cly1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="ScrollViewCount">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clyRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clyChangeModel"
@@ -229,7 +268,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/llyBranchManager"
+        android:id="@+id/llyVoiceConfig"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="10dp"
@@ -238,6 +277,32 @@
         android:background="@drawable/bg_383838_r5"
         android:gravity="start"
         app:layout_constraintTop_toBottomOf="@+id/clyChangeModel">
+
+        <TextView
+            android:id="@+id/tvVoiceConfig"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:drawableEnd="@mipmap/icon_arrow_right_gray"
+            android:drawablePadding="6dp"
+            android:gravity="center_vertical"
+            android:text="音色设置"
+            android:textColor="@color/white"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llyBranchManager"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_383838_r5"
+        android:gravity="start"
+        app:layout_constraintTop_toBottomOf="@+id/llyVoiceConfig">
 
         <TextView
             android:id="@+id/tvBranchManager"
@@ -419,54 +484,31 @@
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clyName"
+    <LinearLayout
+        android:id="@+id/llyReload"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/bg_383838_r5"
-        android:padding="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/ivHeard"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:src="@mipmap/icon_heard_cricle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/llyMemoryBook">
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/ivClearHistory"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="200dp"
-            android:layout_marginStart="10dp"
+            android:layout_height="match_parent"
+            android:drawableStart="@mipmap/icon_reload"
+            android:drawablePadding="6dp"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:text="重制AI对话"
             android:textColor="@color/white"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivHeard"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="XXXX" />
-        <TextView
-            android:id="@+id/tvPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:drawableStart="@mipmap/icon_iphone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="小手机" />
+            android:textSize="14sp"  />
+
+    </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

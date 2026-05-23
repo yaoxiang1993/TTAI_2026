@@ -78,6 +78,7 @@ import com.example.ttai.bean.RemoveChatSlotResponse
 import com.example.ttai.bean.ReplaceChatSlotRequest
 import com.example.ttai.bean.ReplaceChatSlotResponse
 import com.example.ttai.bean.RollbackMessageResponse
+import com.example.ttai.bean.SaveVoiceConfigRequest
 import com.example.ttai.bean.SendCodeData
 import com.example.ttai.bean.SendCodeRequest
 import com.example.ttai.bean.SendMessageData
@@ -97,6 +98,7 @@ import com.example.ttai.bean.UpgradeDoubleReplyData
 import com.example.ttai.bean.UpgradePremiumRequest
 import com.example.ttai.bean.UpgradePremiumResponse
 import com.example.ttai.bean.VerifyCodeAuthRequest
+import com.example.ttai.bean.VoiceConfigData
 import com.example.ttai.bean.WalletData
 import retrofit2.http.*
 
@@ -571,5 +573,24 @@ interface ApiService {
      */
     @GET("api/user/order/status/{order_id}")
     suspend fun getBlindBoxOrderResult(@Path("order_id") orderId: String?): ApiResponse<OrderDetail>
+
+    /**
+    ## 4. 获取角色音色配置
+
+    - `GET /api/characters/<character_id>/voice-config`
+     */
+    @GET("api/characters/{character_id}/voice-config")
+    suspend fun getVoiceConfig(@Path("character_id") characterId: String?): ApiResponse<VoiceConfigData>
+
+
+    /**
+    ## 4. 获取角色音色配置
+
+    - `GET /api/characters/<character_id>/voice-config`
+     */
+    @POST("api/characters/{character_id}/voice-config")
+    suspend fun saveVoiceConfig(@Path("character_id") characterId: String?,@Body request: SaveVoiceConfigRequest): ApiResponse<VoiceConfigData>
+
+
 
 }

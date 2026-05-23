@@ -14,6 +14,7 @@ import com.example.ttai.network.repository.PayRepository
 import com.example.ttai.network.repository.ShopRepository
 import com.example.ttai.network.repository.SelectTagRepository
 import com.example.ttai.network.repository.UserRepository
+import com.example.ttai.network.repository.VoiceConfigRepository
 import com.example.ttai.utils.DebugUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -285,6 +286,9 @@ object NetworkModule {
 
     fun providePayRepository(context: Context): PayRepository {
         return PayRepository(provideApiService(), context)
+    }
+    fun provideVoiceConfigRepository(context: Context): VoiceConfigRepository {
+        return VoiceConfigRepository(provideApiService(), context)
     }
 
 }

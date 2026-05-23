@@ -1961,3 +1961,51 @@ data class BlindBoxResult(
     @SerializedName("record_id")
     val recordId: String
 )
+
+/**
+ * 音色配置核心数据
+ */
+data class VoiceConfigData(
+    @SerializedName("character_id")
+    val characterId: String,
+
+    @SerializedName("character_name")
+    val characterName: String,
+
+    @SerializedName("current_voice")
+    val currentVoice: VoiceOption,
+
+    @SerializedName("voice_options")
+    val voiceOptions: List<VoiceOption>,
+
+    @SerializedName("updated_at")
+    val updatedAt: Long
+)
+
+/**
+ * 单个音色选项
+ */
+data class VoiceOption(
+    @SerializedName("voice_type")
+    val voiceType: String,
+
+    @SerializedName("voice_code")
+    val voiceCode: String,
+
+    @SerializedName("voice_name")
+    val voiceName: String,
+
+    @SerializedName("preview_audio_url")
+    val previewAudioUrl: String,
+
+    @SerializedName("is_default")
+    val isDefault: Boolean,
+
+    @SerializedName("is_selected")
+    var isSelected: Boolean // 设置为 var 方便在 UI 逻辑中切换选中态
+)
+
+data class SaveVoiceConfigRequest(
+    @SerializedName("voice_type") val voice_type: String?,
+    @SerializedName("voice_code") val voice_code: String?
+)
