@@ -14,6 +14,7 @@ import com.example.ttai.bean.CollectItem
 import com.example.ttai.bean.Conversation
 import com.example.ttai.bean.ConversationsData
 import com.example.ttai.bean.FollowsItem
+import com.example.ttai.bean.ImsConfig
 import com.example.ttai.bean.InvitationInfo
 import com.example.ttai.bean.MembershipInfo
 import com.example.ttai.bean.MembershipItem
@@ -27,7 +28,9 @@ import com.example.ttai.bean.ShopItem
 import com.example.ttai.bean.UserProfile
 import com.example.ttai.bean.UserBalance
 import com.example.ttai.bean.RechargePackage
+import com.example.ttai.bean.SDKConfig
 import com.example.ttai.bean.VoiceConfigData
+import com.example.ttai.utils.Constants
 import com.google.gson.annotations.SerializedName
 
 data class LoginState(
@@ -160,7 +163,7 @@ data class ChatState(
     val isLoadingDefaultChat: Boolean = false,
     val isClearMessages: Boolean = false,
     var total_pages: Int = 1,
-    var fairyJade: Int = 0,
+    var fairyJade: Int = -1,
 ) : MviState
 
 data class AcquisitionModeState(
@@ -540,9 +543,15 @@ data class NotifyDetailsState(
 data class VideoCallState(
     val isConnecting: Boolean = false,
     val isPlaying: Boolean = false,
+    val isVoice: Boolean = false,
+    val isEnd: Boolean = false,
     val isMicrophoneOpen: Boolean = true,
-    val playStatus: String = "",
-
+    val imsConfig: ImsConfig? = null, // 后端返回的 RTC 入会参数
+    val sdkConfig: SDKConfig? = null, // 后端返回的 RTC 入会参数
+    val sessionId: String? = null,
+    val playStatus: String = Constants.PLAY_LISTENING,
+    val error: String? = null,
+    val currentSubtitle: String = ""
 ) : MviState
 
 data class VoiceConfigState(

@@ -84,6 +84,67 @@ object ApiHelper {
         }
     }
 
+    suspend fun <T> executeApiRequest(
+        context: Context,
+        requestName: String,
+        showSuccessMessage: Boolean = true,
+        showFailureMessage: Boolean = true,
+        apiCall: suspend () -> ApiResponse<T>
+    ): T? = withContext(Dispatchers.IO) {
+
+        val result = runCatching { apiCall() }
+
+        // 必须 return fold 的结果
+        return@withContext result.fold(
+            onSuccess = { response ->
+
+                // 判断成功：200 且 (Data不为空 或 Data是空字符串)
+                val isSuccess = response.code == 200
+
+                android.util.Log.d("ApiHelper", "$requestName - Code: ${response.code} data: ${response.data}  isSuccess $isSuccess ")
+                if (isSuccess) {
+                    response.data
+                } else {
+                    // 业务失败：直接在里面 throw，这样 fold 就会抛出异常
+                    val errorMsg = response.message ?: "未知错误"
+                    if (showFailureMessage) {
+                        withContext(Dispatchers.Main) { ToastUtils.showError(context, errorMsg) }
+                    }
+                    throw ApiException(response.code, errorMsg)
+                }
+            },
+            onFailure = { e ->
+                // 网络异常：记录日志并抛出
+                android.util.Log.e("ApiHelper", "$requestName 异常", e)
+                if (showFailureMessage && e !is ApiException) {
+                    withContext(Dispatchers.Main) { ToastUtils.showError(context, e.message ?: "网络异常") }
+                }
+                throw e
+            }
+        )
+    }
+
+    /**
+     * 统一异常处理逻辑
+     */
+    private suspend fun handleFailure(context: Context, showMessage: Boolean?, e: Throwable) {
+        val shouldShow = showMessage ?: autoShowErrorMessages
+        if (shouldShow) {
+            showToast(context) {
+                val msg = if (e is ApiException) e.message else "网络请求失败"
+                ToastUtils.showError(context, msg ?: "未知错误")
+            }
+        }
+        throw e
+    }
+
+    /**
+     * 简单的 UI 切换封装
+     */
+    private suspend inline fun showToast(context: Context, crossinline block: () -> Unit) {
+        withContext(Dispatchers.Main) { block() }
+    }
+
     /*catch (e: retrofit2.HttpException) {
         android.util.Log.e("ApiHelper", "$requestName HTTP异常: ${e.code()}", e)
         // 尝试解析错误响应

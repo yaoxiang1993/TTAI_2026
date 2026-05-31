@@ -35,6 +35,7 @@ import com.example.ttai.bean.DeleteCharacterData
 import com.example.ttai.bean.DeleteMessageRequest
 import com.example.ttai.bean.DeletedMessageResponse
 import com.example.ttai.bean.EditeBranchRequest
+import com.example.ttai.bean.EndVoiceRequest
 import com.example.ttai.bean.FavoriteRequest
 import com.example.ttai.bean.FavoriteResponse
 import com.example.ttai.bean.FeaturedCharactersResponse
@@ -85,6 +86,7 @@ import com.example.ttai.bean.SendMessageData
 import com.example.ttai.bean.SendMessageRequest
 import com.example.ttai.bean.ShopItemsResponse
 import com.example.ttai.bean.ShopLinkResponse
+import com.example.ttai.bean.StartVoiceCallRequest
 import com.example.ttai.bean.SwitchBranchRequest
 import com.example.ttai.bean.TagsData
 import com.example.ttai.bean.UnreadCountResponse
@@ -98,7 +100,10 @@ import com.example.ttai.bean.UpgradeDoubleReplyData
 import com.example.ttai.bean.UpgradePremiumRequest
 import com.example.ttai.bean.UpgradePremiumResponse
 import com.example.ttai.bean.VerifyCodeAuthRequest
+import com.example.ttai.bean.VoiceCallData
+import com.example.ttai.bean.VoiceCallStatusUpdate
 import com.example.ttai.bean.VoiceConfigData
+import com.example.ttai.bean.VoiceUserTurnRequest
 import com.example.ttai.bean.WalletData
 import retrofit2.http.*
 
@@ -592,5 +597,76 @@ interface ApiService {
     suspend fun saveVoiceConfig(@Path("character_id") characterId: String?,@Body request: SaveVoiceConfigRequest): ApiResponse<VoiceConfigData>
 
 
+    /**
+    ### 7.2 `POST /api/chat/voice_call/start`
+    作用：
+    - 发起语音通话
+    - 当前真实主链路会调用 IMS `GenerateAIAgentCall`
+    请求体：
+    ```json
+    {
+    "character_id": "68b53a6a42fb612951702f61",
+    "branch_id": null
+    }
+     */
+    @POST("api/chat/voice_call/start")
+    suspend fun startVoiceCall( @Body request: StartVoiceCallRequest): ApiResponse<VoiceCallData>
+
+    /**
+
+    前端联调重点：
+
+    1. 调 `start`
+    2. 读取 `data.sdk`
+    3. 用 `agent_id`、`agent_type`、`region`、`agent_user_id`、`rtc_user_id`、`rtc_token`、`artc_app_id` 初始化 SDK
+    4. 进入房间
+
+    ---
+
+    ## 10. `GET /api/chat/voice_call/active`
+
+    作用：
+
+    - 获取当前用户进行中的语音通话
+    - 用于页面重进、恢复会话、避免重复创建
+    - 真实 IMS 模式下会兜底查询 `DescribeAIAgentInstance`
+
+    查询参数：
+
+    - `character_id`：可选
+
+    示例：
+
+    ```text
+    GET https://becomestar.com.cn/api/chat/voice_call/active?character_id=68b53a6a42fb612951702f61
+    ```
+
+    返回：
+
+    - 有会话时：返回完整会话结构
+    - 无会话时：`data` 为 `null`
+
+     */
+    @GET("api/chat/voice_call/active")
+    suspend fun getVoiceCallActive(@Query("character_id") characterId: String): ApiResponse<VoiceCallData>
+
+
+    @POST("api/chat/voice_call/{session_id}/user_turn")
+    suspend fun sendUserTurn(
+        @Path("session_id") sessionId: String,
+        @Body request: VoiceUserTurnRequest
+    ): ApiResponse<VoiceCallStatusUpdate> // VoiceCallStatusUpdate 是上一个回答中定义的返回结构
+
+    @POST("api/chat/voice_call/{session_id}/end")
+    suspend fun  endVoiceCall(
+        @Path("session_id") sessionId: String,
+        @Body endVoiceRequest: EndVoiceRequest
+    ): ApiResponse<VoiceCallData>
+
+    @POST("api/chat/voice_call/{session_id}/event")
+    suspend fun postVoiceCallEvent(
+        @Path("session_id") sessionId: String,
+        @Body endVoiceRequest: EndVoiceRequest
+    ): ApiResponse<VoiceCallData>
 
 }

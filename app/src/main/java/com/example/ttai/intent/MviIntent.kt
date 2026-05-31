@@ -359,7 +359,15 @@ sealed class NotifyDetailsIntent : MviIntent {
     data class notificationsMarkRead(val notifyEntity: NotificationsEntity?) : NotifyDetailsIntent()
 }
 sealed class VideoCallIntent : MviIntent {
-    object ConnectVideo : VideoCallIntent()
+    data class ConnectVideo(val characterId: String) : VideoCallIntent() // 对应 POST /api/chat/voice_call/start
+    data class SendUserTurn(val text: String) : VideoCallIntent() // 对应 IMS 模式下的 SendAIAgentText
+    object EndCall : VideoCallIntent() // 对应 POST /api/chat/voice_call/<session_id>/end
+    data class ToggleMic(val isMute: Boolean) : VideoCallIntent()
+    data class changeToVoice(val isVoice: Boolean) : VideoCallIntent()
+    data class changePlayStatus(val playStatus: String) : VideoCallIntent()
+    data class AIAgentReply(val text: String?,val isEnd: Boolean) : VideoCallIntent()
+
+
 }
 
 sealed class VoiceConfigIntent : MviIntent {

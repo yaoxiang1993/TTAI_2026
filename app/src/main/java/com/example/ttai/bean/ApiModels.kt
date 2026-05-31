@@ -2009,3 +2009,189 @@ data class SaveVoiceConfigRequest(
     @SerializedName("voice_type") val voice_type: String?,
     @SerializedName("voice_code") val voice_code: String?
 )
+data class StartVoiceCallRequest(
+    @SerializedName("character_id") val character_id: String?,
+    @SerializedName("branch_id") val branch_id: String?
+)
+
+/**
+ * 语音通话核心数据
+ */
+data class VoiceCallData(
+    @SerializedName("session_id") val sessionId: String,
+    @SerializedName("conversation_id") val conversationId: String,
+    @SerializedName("character_id") val characterId: String,
+    @SerializedName("character_name") val characterName: String,
+    @SerializedName("branch_id") val branchId: String?,
+    @SerializedName("call_status") val callStatus: String, // e.g., "connecting"
+    @SerializedName("mic_muted") val micMuted: Boolean,
+    @SerializedName("can_interrupt") val canInterrupt: Boolean,
+    @SerializedName("can_switch_to_text") val canSwitchToText: Boolean,
+    @SerializedName("duration_seconds") val durationSeconds: Int,
+    @SerializedName("latest_user_text") val latestUserText: String?,
+    @SerializedName("latest_ai_text") val latestAiText: String?,
+    @SerializedName("current_message") val currentMessage: String?, // 如果有具体消息结构可替换为对应类
+    @SerializedName("last_message_time") val lastMessageTime: Long,
+    @SerializedName("created_at") val createdAt: Long,
+    @SerializedName("updated_at") val updatedAt: Long,
+    @SerializedName("expires_at") val expiresAt: Long,
+    @SerializedName("provider") val provider: String,
+    @SerializedName("ims") val ims: ImsConfig?,
+    @SerializedName("sdk") val sdk: SDKConfig?,
+    @SerializedName("required_fairy_jade") val requiredFairyJade: Int
+)
+
+/**
+ * 阿里云 IMS / RTC 相关入会参数
+ */
+data class ImsConfig(
+    @SerializedName("instance_id") val instanceId: String,
+    @SerializedName("region") val region: String,
+    @SerializedName("channel_id") val channelId: String,
+    @SerializedName("rtc_user_id") val rtcUserId: String,
+    @SerializedName("rtc_token") val rtcToken: String,
+    @SerializedName("aiagent_user_id") val aiagentUserId: String,
+    @SerializedName("avatar_user_id") val avatarUserId: String,
+    @SerializedName("artc_app_id") val artcAppId: String,
+    @SerializedName("ims_status") val imsStatus: String,
+    @SerializedName("call_log_url") val callLogUrl: String?
+)
+
+/**
+ * 阿里云 IMS / RTC 相关入会参数
+ *     "mode": "official_aicallkit",
+ *     "agent_id": "ffcfce363eff49a7a0a33f23ea02ca1b",
+ *     "agent_type": "VoiceAgent",
+ *     "region": "cn-beijing",
+ *     "agent_user_id": "aiagent-user-id",
+ *     "rtc_user_id": "rtc-user-id",
+ *     "rtc_token": "rtc-token",
+ *     "artc_app_id": "95c78806-66c5-4094-b072-6af4964c2b6b"
+ */
+data class SDKConfig(
+    @SerializedName("mode") val mode: String,
+    @SerializedName("agent_id") val agentId: String,
+    @SerializedName("agent_type") val agentType: String,
+    @SerializedName("region") val region: String,
+    @SerializedName("agent_user_id") val agentUserId: String,
+    @SerializedName("rtc_user_id") val rtcUserId: String,
+    @SerializedName("rtc_token") val rtcToken: String,
+    @SerializedName("artc_app_id") val artcAppId: String,
+)
+
+/**
+ * 语音通话交互请求体
+ * 对应接口：POST /api/chat/voice_call/user_turn
+ */
+data class VoiceUserTurnRequest(
+    /**
+     * 输入模式：如 "voice" 或 "text"
+     */
+    @SerializedName("input_mode")
+    val inputMode: String,
+
+    /**
+     * 文本内容
+     */
+    @SerializedName("content")
+    val content: String,
+
+    /**
+     * 语音文件地址
+     */
+    @SerializedName("audio_url")
+    val audioUrl: String?,
+
+    /**
+     * 语音时长（毫秒）
+     */
+    @SerializedName("audio_duration_ms")
+    val audioDurationMs: Int?
+)
+
+/**
+ * 语音通话状态/交互详情响应
+ */
+data class VoiceCallStatusUpdate(
+    /**
+     * 会话 ID
+     */
+    @SerializedName("session_id")
+    val sessionId: String,
+
+    /**
+     * 通话状态：例如 "thinking" (思考中), "speaking" (说话中), "listening" (聆听中)
+     */
+    @SerializedName("call_status")
+    val callStatus: String,
+
+    /**
+     * 用户发送的消息详情
+     */
+    @SerializedName("user_message")
+    val userMessage: VoiceCallMessage?,
+
+    /**
+     * 状态更新时间戳（秒）
+     */
+    @SerializedName("updated_at")
+    val updatedAt: Long
+)
+
+/**
+ * 语音通话中的消息模型
+ */
+data class VoiceCallMessage(
+    /**
+     * 消息主键 ID
+     */
+    @SerializedName("id")
+    val id: String,
+
+    /**
+     * 消息文本内容
+     */
+    @SerializedName("content")
+    val content: String,
+
+    /**
+     * 消息类型：例如 "voice", "text"
+     */
+    @SerializedName("message_type")
+    val messageType: String,
+
+    /**
+     * 发送者：例如 "user", "ai"
+     */
+    @SerializedName("sender")
+    val sender: String,
+
+    /**
+     * 消息产生的时间戳（秒）
+     */
+    @SerializedName("timestamp")
+    val timestamp: Long,
+
+    /**
+     * 语音文件 URL（仅 voice 类型有效）
+     */
+    @SerializedName("audio_url")
+    val audioUrl: String?,
+
+    /**
+     * 语音时长，单位毫秒（仅 voice 类型有效）
+     */
+    @SerializedName("audio_duration_ms")
+    val audioDurationMs: Int?
+)
+
+/**
+ * 7.8 `POST /api/chat/voice_call/<session_id>/end`
+ */
+data class EndVoiceRequest(
+    /**
+     *  "reason": "user_hangup"
+     */
+    @SerializedName("reason")
+    val reason: String,
+)

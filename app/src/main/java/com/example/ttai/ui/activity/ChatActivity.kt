@@ -219,14 +219,7 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         }
         binding.tvVideoChat.setOnClickListener {
             if (binding.tvVideoChat.isVisible){
-
                 sendIntent(ChatIntent.getCurrencyBalance)
-                val intent = Intent(this, VideoCallActivity::class.java).apply {
-                    putExtra(Constants.CHARACTER_KEY, viewModel.character)
-                }
-                startActivity(intent)
-
-
             }
         }
         binding.ivReload.setOnClickListener {
@@ -416,6 +409,16 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         if (state.isClearMessages) {
             // 清空了历史消息，要重新请求默认信息
             sendIntent(ChatIntent.LoadMessages(conversationId))
+        }
+        Log.e("ChatActivity", "   state.fairyJade ${state.fairyJade}" )
+        if (state.fairyJade > 20) {
+            Log.e("ChatActivity", "   state.fairyJade > 20  to VideoCallActivity" )
+            val intent = Intent(this, VideoCallActivity::class.java).apply {
+                putExtra(Constants.CHARACTER_KEY, viewModel.character)
+            }
+            startActivity(intent)
+        } else if (state.fairyJade > 0) {
+            showChargeMoneyDialog()
         }
 
     }
