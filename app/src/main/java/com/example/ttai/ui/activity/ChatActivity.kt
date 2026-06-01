@@ -524,7 +524,9 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         ).setOnButtonClickListener(object : TwoButtonDialogFragment.OnButtonClickListener {
             override fun onPositiveClick() {
                 val intent = Intent(this@ChatActivity, ChargeMoneyActivity::class.java)
+                binding.tvVideoChat.isVisible = false
                 startActivity(intent)
+
             }
 
             override fun onNegativeClick() {

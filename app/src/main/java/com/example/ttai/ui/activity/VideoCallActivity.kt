@@ -3,7 +3,9 @@ package com.example.ttai.ui.activity
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +37,7 @@ import com.example.ttai.intent.VideoCallIntent
 import com.example.ttai.network.NetworkModule
 import com.example.ttai.state.VideoCallState
 import com.example.ttai.ui.dialog.TwoButtonDialogFragment
+import com.example.ttai.ui.view.CircleWithBorderTransformation
 import com.example.ttai.ui.vm.VideoCallViewModel
 import com.example.ttai.ui.vm.VideoCallViewModelFactory
 import com.example.ttai.utils.Constants
@@ -55,6 +58,16 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
     }
     private var isCalling = false // 增加一个私有标志位
     private var aRTCAICallRobotState : ARTCAICallRobotState? =null
+
+    private var callStartTime = 0L // 记录开始时间
+    private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            val elapsedMillis = System.currentTimeMillis() - callStartTime
+            binding.tvTime.text = formatTime(elapsedMillis)
+            timerHandler.postDelayed(this, 1000) // 每秒更新一次
+        }
+    }
 
     // 成员变量定义
     private var mEngine: ARTCAICallEngineImpl? = null
@@ -101,6 +114,7 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
                 Log.d("VideoCallActivity", "YXTEST    onErrorOccurs $errorCode")
                 // 发生了错误，结束通话
                 mEngine?.handup()
+                timerHandler.removeCallbacks(timerRunnable)
             }
 
             override fun onCallBegin() {
@@ -111,11 +125,15 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
                 mEngine?.muteMicrophone(false)
                 // 通知 UI 更新图标
                 sendIntent(VideoCallIntent.ToggleMic(true))
+                // --- 启动计时器 ---
+                callStartTime = System.currentTimeMillis()
+                timerHandler.post(timerRunnable)
             }
 
             override fun onCallEnd() {
                 Log.d("VideoCallActivity", "YXTEST    onCallEnd")
                 // 通话结束（离会）
+                timerHandler.removeCallbacks(timerRunnable)
             }
 
             override fun onAICallEngineRobotStateChanged(
@@ -256,12 +274,22 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
         binding.tvClickStop.setOnClickListener {
             mEngine?.interruptSpeaking()
         }
+        binding.ivMenu.setOnClickListener {
+            val intent = Intent(this, BlueTestActivity::class.java)
+            startActivity(intent)
+        }
 
 
         sendIntent(VideoCallIntent.ConnectVideo(characterId = character?.id?:""))
         character?.let {
             loadImage(it.avatarUrl)
+            binding.tvName.text = it.name
+            binding.tvName1.text = it.name
+
         }
+        Glide.with(this)
+            .load(R.mipmap.gif_video_chat_speaking)
+            .into(binding.gifVideoChat)
         checkRequiredPermissions{}
     }
 
@@ -367,6 +395,8 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
             Constants.PLAY_THINKING -> "思考中..."
             else -> "" // 或者保留原样 binding.tvStatus.text
         }
+        binding.gifVideoChat.isVisible = state.playStatus == Constants.PLAY_SPEAKING
+        binding.tvClickStop.isVisible = state.playStatus != Constants.PLAY_SPEAKING
         // 【缺少】处理 IMS 入会参数
         state.sdkConfig?.let { config ->
             if (currentSessionId != state.sessionId) {
@@ -396,12 +426,15 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
      * 加载背景图片
      */
     private fun loadImage(imageUrl: String?) {
+        val borderWidthPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics
+        )
         ImageUtils.loadImageToBG(this,imageUrl,binding.ivBackground)
         Glide.with(this)
             .load(imageUrl)
             .placeholder(android.R.drawable.ic_menu_gallery)
             .error(android.R.drawable.ic_menu_report_image)
-            .transform(CenterCrop(), CircleCrop())
+            .transform(CenterCrop(), CircleWithBorderTransformation(borderWidthPx, Color.WHITE))
             .into(binding.ivHeard)
     }
     /**
@@ -460,9 +493,16 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
             requestPermissionsLauncher.launch(missingPermissions.toTypedArray())
         }
     }
+    private fun formatTime(millis: Long): String {
+        val totalSeconds = millis / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
+        timerHandler.removeCallbacks(timerRunnable) // 停止计时
         mEngine?.setEngineCallback(null) // 断开回调
         mEngine?.handup()
         mEngine?.destroy() // 如果 SDK 有 release 方法，务必调用

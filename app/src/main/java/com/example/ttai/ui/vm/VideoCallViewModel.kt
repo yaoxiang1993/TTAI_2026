@@ -101,7 +101,7 @@ class VideoCallViewModel(
                     if (!isEnd) {
                         // 还没结束：在文本后面加一个“光标”符号 ▍ 模拟输入感
                         _state.value = _state.value.copy(
-                            currentSubtitle = "$text ▍"
+                            currentSubtitle = "$text"
                         )
                     } else {
                         // 结束了：移除光标，显示最终文本
