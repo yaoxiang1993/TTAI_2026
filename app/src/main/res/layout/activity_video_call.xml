@@ -68,7 +68,7 @@
         android:id="@+id/tvVideoTip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="与角色通话将消耗 1 仙玉/秒"
+        android:text="与角色通话将消耗 1 仙玉/秒"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

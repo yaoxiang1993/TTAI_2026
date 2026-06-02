@@ -30,10 +30,7 @@ import com.example.ttai.ui.vm.ChatViewModel
 import com.example.ttai.ui.vm.ChatViewModelFactory
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.example.ttai.MyBluetoothManager
 import com.example.ttai.event.AICreatedEvent
-import com.example.ttai.event.ClearChatEvent
-import com.example.ttai.intent.MyFragmentIntent
 import com.example.ttai.utils.ImageUtils
 import com.example.ttai.utils.SystemUIUtils
 import org.greenrobot.eventbus.EventBus
@@ -417,6 +414,7 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
                 putExtra(Constants.CHARACTER_KEY, viewModel.character)
             }
             startActivity(intent)
+            binding.tvVideoChat.isVisible = false
         } else if (state.fairyJade > 0) {
             showChargeMoneyDialog()
         }
@@ -524,9 +522,8 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         ).setOnButtonClickListener(object : TwoButtonDialogFragment.OnButtonClickListener {
             override fun onPositiveClick() {
                 val intent = Intent(this@ChatActivity, ChargeMoneyActivity::class.java)
-                binding.tvVideoChat.isVisible = false
                 startActivity(intent)
-
+                binding.tvVideoChat.isVisible = false
             }
 
             override fun onNegativeClick() {

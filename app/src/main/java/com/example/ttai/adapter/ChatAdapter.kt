@@ -291,7 +291,7 @@ class ChatAdapter(private val onRollbackClick: (Message?) -> Unit,
                         binding.tvMessage.text = formatMessageWithBracketColor(textToShow)
 
                         // 严格遵守用户要求：无论积压多少字，恒定以 50ms 逐字平滑显示到结尾
-                        binding.tvMessage.postDelayed(this, 50L)
+                        binding.tvMessage.postDelayed(this, 0L)
                     } else {
                         // 已经追赶上了当前的文本内容，暂停等待下一批数据
                         typewriterRunnable = null

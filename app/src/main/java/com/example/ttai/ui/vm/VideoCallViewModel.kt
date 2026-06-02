@@ -94,21 +94,20 @@ class VideoCallViewModel(
                 is VideoCallIntent.AIAgentReply -> {
                     val text = intent.text ?: ""
                     val isEnd = intent.isEnd
-
                     // 我们在 State 中维护一个专门给 TextView 显示的字段
                     // 假设这个字段叫 currentSubtitle
-
                     if (!isEnd) {
                         // 还没结束：在文本后面加一个“光标”符号 ▍ 模拟输入感
                         _state.value = _state.value.copy(
                             currentSubtitle = "$text"
                         )
-                    } else {
-                        // 结束了：移除光标，显示最终文本
-                        _state.value = _state.value.copy(
-                            currentSubtitle = text
-                        )
                     }
+//                    else {
+//                        // 结束了：移除光标，显示最终文本
+//                        _state.value = _state.value.copy(
+//                            currentSubtitle = text
+//                        )
+//                    }
                 }
             }
         }

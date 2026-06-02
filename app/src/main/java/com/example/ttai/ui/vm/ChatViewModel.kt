@@ -121,9 +121,11 @@ class ChatViewModel(
      * 获取货币余额
      */
     private suspend fun getCurrencyBalance() {
+        _state.value = _state.value.copy(isLoading = true, error = null)
         try {
             val response = myFragmentRepository.getCurrencyBalance()
             _state.value = _state.value.copy(
+                isLoading = false,
                 fairyJade = response.fairyJade,
                 error = null
             )

@@ -248,7 +248,11 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
 //                sendIntent(VideoCallIntent.SendUserTurn(text))
                 // 2. 如果 SDK 支持文本插话，也可以调用 SDK
                 mEngine?.sendTextToAgent(ARTCAICallEngine.ARTCAICallSendTextToAgentRequest(text))
+                sendIntent(VideoCallIntent.AIAgentReply("我:$text", false))
                 binding.etMessage.text.clear()
+                // 4. 可选：收起软键盘
+                KeyboardManager.hideSoftInput(this)
+                sendIntent(VideoCallIntent.changeToVoice(true))
             }
         }
         binding.ivPhoneHangUp.setOnClickListener {
@@ -259,8 +263,10 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
             }
         }
         binding.ivPhoneConnect.setOnClickListener {
-            val isMute = !(state?.isMicrophoneOpen?:false)
-            mEngine?.muteMicrophone(isMute) // 调用 SDK 静音
+            val isMute = !state?.isMicrophoneOpen!!
+            if (state?.isPlaying == true){
+                mEngine?.muteMicrophone(isMute) // 调用 SDK 静音
+            }
             // 发送 Intent 更新本地 State 切换图标
             sendIntent(VideoCallIntent.ToggleMic(isMute))
         }
@@ -415,7 +421,20 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
         // 更新字幕 TextView
         if (state.currentSubtitle.isNotBlank()) {
             binding.tvChatMessage.isVisible = true
-            binding.tvChatMessage.text = state.currentSubtitle
+            val rawText = state.currentSubtitle
+
+            if (rawText.startsWith("我:")) {
+                val spannable = android.text.SpannableString(rawText)
+                // 设置“我：”这前两个字符的颜色
+                spannable.setSpan(
+                    android.text.style.ForegroundColorSpan(getColor(R.color.primary_color)),
+                    0, 2,
+                    android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                binding.tvChatMessage.text = spannable
+            } else {
+                binding.tvChatMessage.text = rawText
+            }
         } else {
             // 如果当前没有字幕，可以隐藏或者显示占位符
             binding.tvChatMessage.isVisible = false
