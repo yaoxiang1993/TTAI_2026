@@ -104,6 +104,21 @@ android {
             useSupportLibrary = true
         }
     }
+
+    // --- 添加以下代码来重命名 APK ---
+    applicationVariants.all {
+        val variant = this
+        variant.outputs.all {
+            val output = this as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+            // 获取版本号和版本名称
+            val vCode = variant.versionCode
+            val vName = variant.versionName
+            // 构建新的文件名: ttai_1_1.0.0.apk
+            val newFileName = "ttai_${vCode}_${vName}.apk"
+            output.outputFileName = newFileName
+        }
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file("D:\\project\\TTAI0911\\TTAI\\ttai.jks")
