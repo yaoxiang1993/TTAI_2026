@@ -3,6 +3,7 @@ package com.example.ttai.ui.vm
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.ttai.TTAIApplication
 import com.example.ttai.base.MviViewModel
 import com.example.ttai.intent.VideoCallIntent
 import com.example.ttai.network.ApiService
@@ -65,9 +66,9 @@ class VideoCallViewModel(
                 }
                 is VideoCallIntent.EndCall -> {
                     try {
-                        // 调用开始通话接口获取 IMS 参数
-                        val response =
-                            voiceConfigRepository.endVoiceCall( sessionId) // 通知后端结束实例
+                        (context.applicationContext as TTAIApplication).applicationScope.launch {
+                            voiceConfigRepository.endVoiceCall( sessionId)
+                        }
                         _state.value =
                             _state.value.copy(isConnecting = false, isPlaying = false, isEnd = true)
                     } catch (e: Exception) {
@@ -93,10 +94,10 @@ class VideoCallViewModel(
                 }
                 is VideoCallIntent.AIAgentReply -> {
                     val text = intent.text ?: ""
-                    val isEnd = intent.isEnd
+                    val isTextEnd = intent.isTextEnd
                     // 我们在 State 中维护一个专门给 TextView 显示的字段
                     // 假设这个字段叫 currentSubtitle
-                    if (!isEnd) {
+                    if (!isTextEnd) {
                         // 还没结束：在文本后面加一个“光标”符号 ▍ 模拟输入感
                         _state.value = _state.value.copy(
                             currentSubtitle = "$text"

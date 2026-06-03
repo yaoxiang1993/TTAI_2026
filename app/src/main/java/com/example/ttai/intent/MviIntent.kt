@@ -365,7 +365,7 @@ sealed class VideoCallIntent : MviIntent {
     data class ToggleMic(val isMute: Boolean) : VideoCallIntent()
     data class changeToVoice(val isVoice: Boolean) : VideoCallIntent()
     data class changePlayStatus(val playStatus: String) : VideoCallIntent()
-    data class AIAgentReply(val text: String?,val isEnd: Boolean) : VideoCallIntent()
+    data class AIAgentReply(val text: String?,val isTextEnd: Boolean) : VideoCallIntent()
 
 
 }

@@ -7,13 +7,16 @@ import com.example.ttai.utils.ApiSettings
 import com.example.ttai.utils.DebugUtils
 import com.example.ttai.utils.EnvironmentConfig
 import com.example.ttai.utils.MMKVUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /**
  * TTAI应用主类
  * 负责初始化应用级别的配置
  */
 class TTAIApplication : Application() {
-    
+    val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onCreate() {
         super.onCreate()
         

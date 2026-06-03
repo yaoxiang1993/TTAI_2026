@@ -58,6 +58,7 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
     }
     private var isCalling = false // 增加一个私有标志位
     private var aRTCAICallRobotState : ARTCAICallRobotState? =null
+    private var isEndCallSent = false // 用于标记是否已经发送过挂断请求
 
     private var callStartTime = 0L // 记录开始时间
     private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -466,7 +467,7 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
             negativeText = "取消"
         ).setOnButtonClickListener(object : TwoButtonDialogFragment.OnButtonClickListener {
             override fun onPositiveClick() {
-              sendIntent(VideoCallIntent.EndCall)
+                endCallAndFinish() // 使用统一方法
             }
 
             override fun onNegativeClick() {
@@ -520,11 +521,28 @@ class VideoCallActivity : BaseMviActivity<VideoCallIntent, VideoCallState, Video
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        // 1. 发送 Intent 给 ViewModel 处理业务逻辑
+        if (!isEndCallSent) {
+            isEndCallSent = true
+            sendIntent(VideoCallIntent.EndCall)
+        }
         timerHandler.removeCallbacks(timerRunnable) // 停止计时
         mEngine?.setEngineCallback(null) // 断开回调
         mEngine?.handup()
         mEngine?.destroy() // 如果 SDK 有 release 方法，务必调用
         mEngine = null
+        super.onDestroy()
+    }
+    /**
+     * 统一的结束通话方法
+     */
+    private fun endCallAndFinish() {
+        if (!isEndCallSent) {
+            isEndCallSent = true
+            sendIntent(VideoCallIntent.EndCall)
+            // 这里可以执行 SDK 的挂断
+            mEngine?.handup()
+        }
+        finish()
     }
 }

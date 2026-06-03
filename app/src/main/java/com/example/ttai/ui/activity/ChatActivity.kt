@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.EventBus
 class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, ActivityChatBinding>() {
     private var characterId = ""
     private var conversationId  =  ""
+    private var onlyVideoCallActivity = false
     private val fromSelectTag by lazy { intent.getBooleanExtra(Constants.FROM_SELECT_TAG, false) }
     override val viewModel: ChatViewModel by viewModels { 
         ChatViewModelFactory(NetworkModule.provideApiService(), this)
@@ -216,6 +217,7 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
         }
         binding.tvVideoChat.setOnClickListener {
             if (binding.tvVideoChat.isVisible){
+                onlyVideoCallActivity = true
                 sendIntent(ChatIntent.getCurrencyBalance)
             }
         }
@@ -408,13 +410,16 @@ class ChatActivity : BaseMviActivity<ChatIntent, ChatState, ChatViewModel, Activ
             sendIntent(ChatIntent.LoadMessages(conversationId))
         }
         Log.e("ChatActivity", "   state.fairyJade ${state.fairyJade}" )
-        if (state.fairyJade > 20) {
-            Log.e("ChatActivity", "   state.fairyJade > 20  to VideoCallActivity" )
-            val intent = Intent(this, VideoCallActivity::class.java).apply {
-                putExtra(Constants.CHARACTER_KEY, viewModel.character)
+        if (state.fairyJade > 20 ) {
+            if ( onlyVideoCallActivity){
+                onlyVideoCallActivity = false
+                Log.e("ChatActivity", "   state.fairyJade > 20  to VideoCallActivity" )
+                val intent = Intent(this, VideoCallActivity::class.java).apply {
+                    putExtra(Constants.CHARACTER_KEY, viewModel.character)
+                }
+                startActivity(intent)
+                binding.tvVideoChat.isVisible = false
             }
-            startActivity(intent)
-            binding.tvVideoChat.isVisible = false
         } else if (state.fairyJade > 0) {
             showChargeMoneyDialog()
         }
